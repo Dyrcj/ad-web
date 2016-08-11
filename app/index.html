@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Angular Material - Starter App</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no"/>
+
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
+    <link rel="stylesheet" href="../node_modules/angular-material/angular-material.css"/>
+    <link rel="stylesheet" href="assets/app.css"/>
+
+    <style type="text/css">
+        /**
+         * Hide when Angular is not yet loaded and initialized
+         */
+        [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+            display: none !important;
+        }
+    </style>
+
+</head>
+
+<body ng-app="starterApp" layout="column" ng-controller="baseController as bl" ng-cloak>
+
+
+<!--<div flex layout="row">-->
+
+<!--<md-sidenav  ng-click="ul.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
+  <md-list>
+    <md-list-item ng-repeat="it in ul.users">
+        <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
+          <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
+          {{it.name}}
+        </md-button>
+    </md-list-item>
+  </md-list>
+</md-sidenav>-->
+<md-toolbar layout="row">
+    <md-button class="menu" hide-gt-sm ng-click="bl.toggleList()" aria-label="Show User List">
+        <md-icon md-svg-icon="menu"></md-icon>
+    </md-button>
+    <h1>自动上线</h1>
+</md-toolbar>
+<md-content layout="row" flex>
+    <md-sidenav ng-click="bl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15">
+        <md-list>
+            <!--<md-list-item>
+                <md-button ui-sref="managePanel">管理面板</md-button>
+            </md-list-item>-->
+            <md-list-item>
+                <md-button ui-sref="onlinePanel">上线面板</md-button>
+            </md-list-item>
+            <!--<md-list-item>
+                <md-button ui-sref="state3">业务中心</md-button>
+            </md-list-item>-->
+            <md-list-item>
+                <md-button ui-sref="state4">资源中心</md-button>
+            </md-list-item>
+            <md-list-item>
+                <md-button ui-sref="state5">系统配置</md-button>
+            </md-list-item>
+            <md-list-item>
+                <md-button ui-sref="state6">用户管理</md-button>
+            </md-list-item>
+            <md-list-item>
+                <md-button ui-sref="state7">统计报表</md-button>
+            </md-list-item>
+            <md-list-item>
+                <md-button ui-sref="state8">操作日志</md-button>
+            </md-list-item>
+
+        </md-list>
+    </md-sidenav>
+
+    <md-content flex id="content" layout="row">
+        <md-content flex>
+            <div ui-view></div>
+        </md-content>
+    </md-content>
+</md-content>
+
+<!--</div>-->
+
+
+<script src="../node_modules/angular/angular.js"></script>
+<script src="../node_modules/angular-animate/angular-animate.js"></script>
+<script src="../node_modules/angular-aria/angular-aria.js"></script>
+<script src="../node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="../node_modules/angular-material-icons/angular-material-icons.js"></script>
+<script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
+
+<script src="./src/users/Users.js"></script>
+<script src="./src/users/UserController.js"></script>
+<script src="./src/users/UserService.js"></script>
+
+<script src="./src/managePanel/ManagePanel.js"></script>
+<script src="./src/managePanel/ManagePanelController.js"></script>
+<script src="./src/managePanel/ManagePanelService.js"></script>
+
+<script src="./src/onlinePanel/OnlinePanel.js"></script>
+<script src="./src/onlinePanel/OnlinePanelService.js"></script>
+
+<script type="text/javascript" src="app.js"></script>
+
+</body>
+</html>

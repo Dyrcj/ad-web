@@ -1,0 +1,20 @@
+<md-dialog aria-label="新建业务">
+
+        <md-dialog-content style="width: 800px">
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>新建业务</h2>
+                    <span flex></span>
+                    <md-button class="md-icon-button" ng-click="cancel()">
+                        <ng-md-icon icon="cancel"></ng-md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+            <form>
+            <md-input-container style="width: 750px">
+                <label>业务名称</label>
+                <input ng-model="color" required md-maxlength="20">
+            </md-input-container>
+            </form>
+        </md-dialog-content>
+</md-dialog>

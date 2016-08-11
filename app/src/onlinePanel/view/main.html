@@ -1,0 +1,68 @@
+<div layout="row">
+    <md-input-container class="md-block" flex>
+        <label>搜索框</label>
+        <input ng-model="input">
+    </md-input-container>
+    <md-button ng-click="createBusiness()" ng-style="{'background': 'lightgreen'}" style="height: 10px">新建业务</md-button>
+</div>
+<div layout="row">
+    <div flex>
+        <div ng-repeat="Business in Businesses | filter:input">
+            <md-list flex ng-if="$even">
+                <md-subheader ng-style="{'background': 'pink'}" class="md-no-sticky">
+                    {{Business.name}}
+                </md-subheader>
+                <md-list-item class="md-2-line" ng-repeat="server in Business.servers" ng-click="null">
+                    <div class="md-list-item-text">
+                        <div layout="column">
+                            <h3>{{ server.serverName }}</h3>
+                            <h4>{{ server.status }}</h4>
+                            <p>{{ server.version }}</p>
+                        </div>
+                        <md-button class="md-secondary" ng-click="null">一键上线</md-button>
+                        <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
+                        <md-button class="md-secondary" ng-click="getServerInfo(server.serverNameID)">服务器详情</md-button>
+                        <md-checkbox class="md-secondary" ng-model="server.wanted"></md-checkbox>
+                    </div>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-grid-tile-footer>
+                    <md-button class="md-secondary" ng-click="null">提交内测</md-button>
+                    <md-button class="md-secondary" ng-click="null">一键上线</md-button>
+                    <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
+                    <md-button class="md-secondary" ng-click="null">业务详情</md-button>
+                </md-grid-tile-footer>
+            </md-list>
+        </div>
+    </div>
+    <md-divider></md-divider>
+    <div flex>
+        <div ng-repeat="Business in Businesses | filter:input">
+            <md-list flex ng-if="$odd">
+                <md-subheader ng-style="{'background': 'pink'}" class="md-no-sticky">
+                    {{Business.name}}
+                </md-subheader>
+                <md-list-item class="md-2-line" ng-repeat="server in Business.servers" ng-click="null">
+                    <div class="md-list-item-text">
+                        <div layout="column">
+                            <h3>{{ server.serverName }}</h3>
+                            <h4>{{ server.status }}</h4>
+                            <p>{{ server.version }}</p>
+                        </div>
+                        <md-button class="md-secondary" ng-click="null">一键上线</md-button>
+                        <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
+                        <md-button class="md-secondary" ng-click="getServerInfo(server.serverNameID)">服务器详情</md-button>
+                        <md-checkbox class="md-secondary" ng-model="server.wanted"></md-checkbox>
+                    </div>
+                </md-list-item>
+                <md-divider></md-divider>
+                <md-grid-tile-footer>
+                    <md-button class="md-secondary" ng-click="null">提交内测</md-button>
+                    <md-button class="md-secondary" ng-click="null">一键上线</md-button>
+                    <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
+                    <md-button class="md-secondary" ng-click="null">业务详情</md-button>
+                </md-grid-tile-footer>
+            </md-list>
+        </div>
+    </div>
+</div>

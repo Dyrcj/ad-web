@@ -1,0 +1,32 @@
+<md-bottom-sheet class="md-has-header" ng-cloak flex>
+    <md-subheader class="md-primary md-no-sticky" ng-style="{'background': 'pink'}">{{ctrl.serverInfo.serverName}}
+    </md-subheader>
+    <div flex layout="row">
+        <md-list flex>
+            <md-list-item flex>
+                <md-button flex>{{ctrl.serverInfo.status}}</md-button>
+                <md-button flex>{{ctrl.serverInfo.version}}</md-button>
+                <md-select flex ng-model="ctrl.serverInfo.state">
+                    <md-option ng-repeat="state in ctrl.serverInfo.gitVersionList" value="{{state}}"
+                               ng-disabled='state == ctrl.serverInfo.version'>
+                        {{state}}
+                    </md-option>
+                </md-select>
+            </md-list-item>
+            <md-list-item flex>
+                <md-button>开启服务器</md-button>
+                <md-button>关闭服务器</md-button>
+                <md-button>上线</md-button>
+                <md-button>回滚到指定版本</md-button>
+            </md-list-item>
+            <md-list-item>
+                <md-progress-circular class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
+            </md-list-item>
+        </md-list>
+        <md-divider></md-divider>
+        <md-input-container flex>
+            <label>Tomcat Log</label>
+            <textarea disabled rows="5" style="overflow: scroll">{{ctrl.serverInfo.log}}</textarea>
+        </md-input-container>
+    </div>
+</md-bottom-sheet>
