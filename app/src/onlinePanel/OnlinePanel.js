@@ -11,10 +11,12 @@
                     url: "/onlinePanel",
                     templateUrl: '/app/src/onlinePanel/view/main.html',
                     controller: function ($scope, onlinePanelService, $mdBottomSheet, $mdDialog) {
+                      $scope.loaded = false;
                         onlinePanelService
                             .loadAllBusinesses()
                             .then(function (Businesses) {
-                                $scope.Businesses = [].concat(Businesses);
+                                $scope.Businesses = [].concat(Businesses['data']['message']);
+                                $scope.loaded = true;
                             });
                         $scope.getServerInfo = function (serverID) {
                             console.log(serverID);
@@ -55,7 +57,7 @@
                         };
                     }
                 });
-            function DialogController($scope, $mdDialog) {
+            function DialogController($scope, $mdDialog, onlinePanelService) {
                 $scope.hide = function() {
                     $mdDialog.hide();
                 };
@@ -65,6 +67,38 @@
                 $scope.answer = function(answer) {
                     $mdDialog.hide(answer);
                 };
+
+                $scope.check_email = "";
+                $scope.is_email = false;
+                $scope.select_check = function(){
+                  if($scope.check_method == 0){
+                    $scope.is_email = true;
+                  }else{
+                    $scope.is_email = false;
+                  }
+                };
+                $scope.test = function(){
+                  var method = checkMethod($scope.check_method);
+                  var data_msg = {
+                    'business_name':$scope.business_name,
+                    'git_name':$scope.git_name,
+                    'pm':$scope.pm,
+                    'audit_type':method,
+                    'audit_email':$scope.check_email,
+                    'description':$scope.description
+                  };
+                  onlinePanelService.createBusiness(data_msg)
+                    .then(function(result){
+                      alert(result['data']['message']);
+                    });
+                }
+
+                function checkMethod(value){
+                  switch(value){
+                    case 0:return 'email';break;
+                    case 1:return 'op';break;
+                  }
+                }
             }
             function ContactSheetController() {
                 this.serverInfo = thisServerInfo;

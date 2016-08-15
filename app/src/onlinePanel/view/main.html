@@ -5,6 +5,7 @@
     </md-input-container>
     <md-button ng-click="createBusiness()" ng-style="{'background': 'lightgreen'}" style="height: 10px">新建业务</md-button>
 </div>
+<md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
 <div layout="row">
     <div flex>
         <div ng-repeat="Business in Businesses | filter:input">
@@ -17,7 +18,8 @@
                         <div layout="column">
                             <h3>{{ server.serverName }}</h3>
                             <h4>{{ server.status }}</h4>
-                            <p>{{ server.version }}</p>
+                            <!-- <p>{{ server.version }}</p> -->
+                            <h4>{{ server.serverIp }}</h4>
                         </div>
                         <md-button class="md-secondary" ng-click="null">一键上线</md-button>
                         <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
@@ -45,9 +47,10 @@
                 <md-list-item class="md-2-line" ng-repeat="server in Business.servers" ng-click="null">
                     <div class="md-list-item-text">
                         <div layout="column">
-                            <h3>{{ server.serverName }}</h3>
-                            <h4>{{ server.status }}</h4>
-                            <p>{{ server.version }}</p>
+                          <h3>{{ server.serverName }}</h3>
+                          <h4>{{ server.status }}</h4>
+                          <!-- <p>{{ server.version }}</p> -->
+                          <h4>{{ server.serverIp }}</h4>
                         </div>
                         <md-button class="md-secondary" ng-click="null">一键上线</md-button>
                         <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
