@@ -76,6 +76,7 @@
     </md-sidenav>
 
     <md-content flex id="content" layout="row">
+
         <md-content flex>
             <div ui-view></div>
         </md-content>
@@ -90,17 +91,21 @@
 <script src="../node_modules/angular-aria/angular-aria.js"></script>
 <script src="../node_modules/angular-ui-router/release/angular-ui-router.js"></script>
 <script src="../node_modules/angular-material-icons/angular-material-icons.js"></script>
+<script src="../node_modules/socket.io-client/socket.io.js"></script>
+<script src="../node_modules/angular-socket-io/socket.js"></script>
+<script src="../node_modules/ngstorage/ngStorage.js"></script>
 <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
 
-<script src="./src/users/Users.js"></script>
+<!--<script src="./src/users/Users.js"></script>
 <script src="./src/users/UserController.js"></script>
-<script src="./src/users/UserService.js"></script>
+<script src="./src/users/UserService.js"></script>-->
 
 <script src="./src/managePanel/ManagePanel.js"></script>
 <script src="./src/managePanel/ManagePanelController.js"></script>
 <script src="./src/managePanel/ManagePanelService.js"></script>
 
 <script src="./src/onlinePanel/OnlinePanel.js"></script>
+<script src="./src/onlinePanel/OnlinePanelController.js"></script>
 <script src="./src/onlinePanel/OnlinePanelService.js"></script>
 
 <script type="text/javascript" src="app.js"></script>

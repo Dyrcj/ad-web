@@ -1,7 +1,7 @@
 (function () {
     'use strict';
 
-    angular.module('users')
+    angular.module('onlinePanel')
         .service('onlinePanelService', ['$q', OnlinePanelService]);
 
     /**
@@ -88,7 +88,7 @@
             status: 'running',
             version: '75',
             gitVersionList: [71, 72, 73, 74, 75],
-            log: '巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴'
+            log: '巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴\n巴拉巴拉巴拉巴'
         },
             {
                 serverID: '2',
@@ -124,13 +124,10 @@
             getRemoteServerInfo: function (serverID) {
                 var serverInfo;
                 for(var i = 0; i < serverInfos.length; i ++) {
-                    console.log(serverID + "  " + serverInfos[i].serverID);
                     if(serverID == serverInfos[i].serverID) {
                         serverInfo = serverInfos[i];
-                        console.log(JSON.stringify(serverInfo));
                     }
                 }
-                console.log(JSON.stringify(serverInfo));
                 return $q.when(serverInfo);
             }
         };

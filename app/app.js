@@ -1,6 +1,6 @@
 angular
-    .module('starterApp', ['ngMaterial', 'ui.router', 'ngMdIcons', 'users', 'managePanel', 'onlinePanel'])
-    .config(function($mdThemingProvider, $mdIconProvider){
+    .module('starterApp', ['ngMaterial', 'ui.router', 'ngMdIcons', 'ngStorage', 'managePanel', 'onlinePanel'])
+    .config(function ($mdThemingProvider, $mdIconProvider) {
         $mdIconProvider
             .defaultIconSet("./assets/svg/avatars.svg", 128)
             .icon("menu", "./assets/svg/menu.svg", 24);
@@ -9,15 +9,53 @@ angular
             .accentPalette('red');
 
     })
-    .controller('baseController', ['$mdSidenav', function ($mdSidenav) {
-        var self = this;
-        self.toggleList   = toggleUsersList;
-        function toggleUsersList() {
-            $mdSidenav('left').toggle();
-        }
+    .controller('baseController', ['$scope', '$sessionStorage', function ($scope, $sessionStorage) {
+        var data = {
+            userID: '12',
+            userName: 'lidawei',
+            orgID: '2',
+            token: 'sfssfd-afds-asdf-af32s'
+        };
+        $sessionStorage.data = data;
 
-        self.selectUser = function selectUser() {
+        console.log($sessionStorage.data);
 
-        }
+        delete $sessionStorage.data;
+        console.log($sessionStorage.data);
 
-    }]);
+    }])
+    .factory('socket', function () {
+        var socket = io.connect('127.0.0.1:4200');
+        socket.on('connect', function () {
+
+        });
+        return socket;
+    })
+    .factory('subscribe', function (socket) {
+        var container =  [];
+        return {
+            subscribe: function (options, callback) {
+                if(options){
+                    var collectionName = options.collectionName;
+                    var userId = options.userId;
+                    var modelId = options.modelId;
+                    var name = '/' + collectionName + '/' + modelId + '/' + userId;
+                    socket.on(name, callback);
+                    //Push the container..
+                    this.pushContainer(name);
+                }else{
+                    throw 'Error: Option must be an object';
+                }
+            },
+            pushContainer : function(subscriptionName){
+                container.push(subscriptionName);
+            },
+            unSubscribeAll: function(){
+                for(var i=0; i<container.length; i++){
+                    socket.removeAllListeners(container[i]);
+                }
+                //Now reset the container..
+                container = [];
+            }
+        };
+    });
