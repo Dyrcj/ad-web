@@ -70,6 +70,39 @@
                 $scope.answer = function (answer) {
                     $mdDialog.hide(answer);
                 };
+
+                $scope.check_email = "";
+                $scope.is_email = false;
+                $scope.select_check = function(){
+                  if($scope.check_method == 0){
+                    $scope.is_email = true;
+                  }else{
+                    $scope.is_email = false;
+                  }
+                };
+                $scope.submit_create = function(){
+                  var method = checkMethod($scope.check_method);
+                  var data_msg = {
+                    'business_name':$scope.business_name,
+                    'git_name':$scope.git_name,
+                    'pm':$scope.pm,
+                    'audit_type':method,
+                    'audit_email':$scope.check_email,
+                    'description':$scope.description
+                  };
+                  onlinePanelService.createBusiness(data_msg)
+                    .then(function(result){
+                      alert(result);
+                      $scope.cancel();
+                    });
+                }
+
+                function checkMethod(value){
+                  switch(value){
+                    case 0:return 'email';break;
+                    case 1:return 'op';break;
+                  }
+                }
             }
 
             function ContactSheetController($scope, subpub) {
