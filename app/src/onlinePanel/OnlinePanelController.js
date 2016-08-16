@@ -70,7 +70,7 @@
                     $scope.is_email = false;
                   }
                 };
-                $scope.test = function(){
+                $scope.submit_create = function(){
                   var method = checkMethod($scope.check_method);
                   var data_msg = {
                     'business_name':$scope.business_name,
@@ -82,7 +82,8 @@
                   };
                   onlinePanelService.createBusiness(data_msg)
                     .then(function(result){
-                      alert(result['data']['message']);
+                      alert(result);
+                      $scope.cancel();
                     });
                 }
 
