@@ -53,13 +53,13 @@ angular
             },
             pushContainer : function(subscriptionName){
                 container.push(subscriptionName);
-            },
+            }/*,
             unSubscribeAll: function(){
                 for(var i=0; i<container.length; i++){
                     socket.removeAllListeners(container[i]);
                 }
                 //Now reset the container..
                 container = [];
-            }
+            }*/
         };
     });
