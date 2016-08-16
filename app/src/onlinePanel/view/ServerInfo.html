@@ -1,15 +1,15 @@
 <md-bottom-sheet class="md-has-header" ng-cloak flex>
-    <md-subheader class="md-primary md-no-sticky" ng-style="{'background': 'pink'}">{{ctrl.serverInfo.serverName}}
+    <md-subheader class="md-primary md-no-sticky" ng-style="{'background': 'pink'}">{{serverInfo.serverName}}
     </md-subheader>
     <div flex layout="row" style="max-height: 500px">
         <div flex style="overflow: scroll;">
             <md-list flex>
                 <md-list-item flex>
-                    <md-button flex>{{ctrl.serverInfo.status}}</md-button>
-                    <md-button flex>{{ctrl.serverInfo.version}}</md-button>
+                    <md-button flex>{{serverInfo.status}}</md-button>
+                    <md-button flex>{{serverInfo.version}}</md-button>
                     <md-select flex ng-model="ctrl.serverInfo.state">
-                        <md-option ng-repeat="state in ctrl.serverInfo.gitVersionList" value="{{state}}"
-                                   ng-disabled='state == ctrl.serverInfo.version'>
+                        <md-option ng-repeat="state in serverInfo.gitVersionList" value="{{state}}"
+                                   ng-disabled='state == serverInfo.version'>
                             {{state}}
                         </md-option>
                     </md-select>
@@ -22,6 +22,7 @@
                 </md-list-item>
                 <md-list-item>
                     <md-progress-circular class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
+                    <div>{{log}}</div>
                 </md-list-item>
             </md-list>
         </div>
@@ -30,7 +31,7 @@
         <div flex style="overflow: scroll;">
             <md-input-container flex>
                 <label>Tomcat Log</label>
-                <textarea disabled>{{ctrl.serverInfo.log}}</textarea>
+                <textarea disabled>{{log}}</textarea>
             </md-input-container>
         </div>
     </div>

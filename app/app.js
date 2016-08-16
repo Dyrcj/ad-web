@@ -9,7 +9,7 @@ angular
             .accentPalette('red');
 
     })
-    .controller('baseController', ['$scope', '$sessionStorage', function ($scope, $sessionStorage) {
+    .controller('baseController', ['$scope', '$sessionStorage', 'socket', function ($scope, $sessionStorage) {
         var data = {
             userID: '12',
             userName: 'lidawei',
@@ -22,16 +22,19 @@ angular
 
         delete $sessionStorage.data;
         console.log($sessionStorage.data);
+        /*subpub.subscribe({}, function (result) {
+            console.log(result);
+        });*/
 
     }])
     .factory('socket', function () {
         var socket = io.connect('127.0.0.1:4200');
         socket.on('connect', function () {
-
+            console.log('connect sucess');
         });
         return socket;
     })
-    .factory('subscribe', function (socket) {
+    .factory('subpub', function (socket) {
         var container =  [];
         return {
             subscribe: function (options, callback) {
@@ -41,6 +44,7 @@ angular
                     var modelId = options.modelId;
                     var name = '/' + collectionName + '/' + modelId + '/' + userId;
                     socket.on(name, callback);
+                    socket.emit('sub', name);
                     //Push the container..
                     this.pushContainer(name);
                 }else{

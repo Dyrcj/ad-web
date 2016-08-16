@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('onlinePanel')
-        .controller('onlinePanelMainController', function ($scope, onlinePanelService, $mdBottomSheet, $mdDialog) {
+        .controller('onlinePanelMainController', function ($scope, onlinePanelService, $mdBottomSheet, $mdDialog, subpub) {
             var thisServerInfo;
             var thisServerID;
             $scope.loaded = false;
@@ -12,6 +12,16 @@
                     $scope.Businesses = [].concat(Businesses);
                     $scope.loaded = true;
                 });
+            //$scope.serverInfo = thisServerInfo;
+            subpub.subscribe({
+                collectionName : 'serverinfo',
+                userId : 'test',
+                modelId : 'admin'
+            }, function (result) {
+                console.log(result);
+                $scope.log = result;
+                $scope.$apply();
+            });
             $scope.getServerInfo = function (serverID) {
                 console.log(serverID);
                 onlinePanelService.getRemoteServerInfo(serverID)
@@ -62,9 +72,9 @@
                 };
             }
 
-            function ContactSheetController() {
-                this.serverInfo = thisServerInfo;
-                subscribe.subscribe();
+            function ContactSheetController($scope, subpub) {
+                //this.serverInfo = thisServerInfo;
+
                 /*this.serverID = thisServerID;*/
             };
         });
