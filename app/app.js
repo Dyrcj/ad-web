@@ -1,34 +1,25 @@
 angular
-    .module('starterApp', ['ngMaterial', 'ui.router', 'ngMdIcons', 'ngStorage', 'managePanel', 'onlinePanel'])
-    .config(function ($mdThemingProvider, $mdIconProvider) {
+    .module('starterApp', ['ngMaterial', 'ui.router', 'ngMdIcons', 'ngStorage', 'users', 'managePanel', 'onlinePanel', 'angular-jwt', 'person'])
+    .config(function ($mdThemingProvider, $mdIconProvider, $httpProvider) {
         $mdIconProvider
             .defaultIconSet("./assets/svg/avatars.svg", 128)
             .icon("menu", "./assets/svg/menu.svg", 24);
         $mdThemingProvider.theme('default')
             .primaryPalette('green')
             .accentPalette('red');
+        $httpProvider.interceptors.push('authHttpResponseInterceptor');
 
     })
-    .controller('baseController', ['$scope', '$sessionStorage', 'socket', function ($scope, $sessionStorage) {
-        var data = {
-            userID: '12',
-            userName: 'lidawei',
-            orgID: '2',
-            token: 'sfssfd-afds-asdf-af32s'
-        };
-        $sessionStorage.data = data;
-
-        console.log($sessionStorage.data);
-
-        delete $sessionStorage.data;
-        console.log($sessionStorage.data);
-        /*subpub.subscribe({}, function (result) {
-            console.log(result);
-        });*/
-
+    .controller('baseController', ['$scope', '$state', '$sessionStorage', 'socket', function ($scope, $state, $sessionStorage) {
+        $scope.logout = function () {
+            console.log('logout');
+            delete $sessionStorage.token;
+            delete $sessionStorage.userInfo;
+            $state.go('login');
+        }
     }])
     .factory('socket', function () {
-        var socket = io.connect('127.0.0.1:4200');
+        var socket = io.connect('172.17.106.21:4200');
         socket.on('connect', function () {
             console.log('connect sucess');
         });
@@ -62,4 +53,35 @@ angular
                 container = [];
             }*/
         };
-    });
+    })
+    .factory('authHttpResponseInterceptor', ['$q','$location', '$sessionStorage', '$injector', function($q, $location, $sessionStorage, $injector) {
+        return {
+            response: function(response){
+                if (response.status === 401 || response.status === 403) {
+                    var stateService = $injector.get('$state');
+                    stateService.go('login');
+                }
+
+                return response || $q.when(response);
+            },
+            responseError: function(rejection) {
+                if (rejection.status === 401 || rejection.status === 403) {
+                    var stateService = $injector.get('$state');
+                    stateService.go('login');
+                }
+                return $q.reject(rejection);
+            },
+            request: function (config) {
+                //var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTdhODIwMjk3MTIyYjZmMzA1YTA1ZWE1IiwibmFtZSI6InVzZXIyIiwiZW1haWwiOiJ1c2VyMjJAeWVlcGF5LmNvbSIsImlzX2FkbWluIjp0cnVlLCJwaG9uZSI6MTgzNjYxMTEwMDIsImlhdCI6MTQ3MTMyODIyNiwiZXhwIjoxNDcxNDE0NjI2fQ.ot54Ou6QVxF7C0qrDzvd6E9NBJHwoVeZO5kSa0qIO-w";
+                //$sessionStorage.token = token;
+                config.headers = config.headers || {};
+                config.headers["Content-Type"] = "application/x-www-form-urlencoded";
+                console.log('test');
+                if ($sessionStorage.token) {
+                    config.headers.token = $sessionStorage.token;
+                }
+                console.log(config.headers.token);
+                return config;
+            }
+        };
+    }]);

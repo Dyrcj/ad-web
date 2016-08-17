@@ -6,6 +6,11 @@ html, body {
   padding: 0px;
 }
 
+
+.stretch input  {
+    width: 100%
+}
+
 /* Toolbar area */
 
 .menu {

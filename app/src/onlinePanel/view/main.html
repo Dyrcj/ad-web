@@ -4,7 +4,6 @@
         <input ng-model="input">
     </md-input-container>
     <md-button ng-click="createBusiness()" ng-style="{'background': 'lightgreen'}" style="height: 10px">新建业务</md-button>
-    <div>{{log}}</div>
 </div>
 <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
 <div layout="row">
@@ -24,7 +23,7 @@
                         </div>
                         <md-button class="md-secondary" ng-click="null">一键上线</md-button>
                         <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
-                        <md-button class="md-secondary" ng-click="getServerInfo(server.serverNameID)">服务器详情</md-button>
+                        <md-button class="md-secondary" ng-click="getServerInfo(server.serverId)">服务器详情</md-button>
                         <md-checkbox class="md-secondary" ng-model="server.wanted"></md-checkbox>
                     </div>
                 </md-list-item>
@@ -55,7 +54,7 @@
                         </div>
                         <md-button class="md-secondary" ng-click="null">一键上线</md-button>
                         <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
-                        <md-button class="md-secondary" ng-click="getServerInfo(server.serverNameID)">服务器详情</md-button>
+                        <md-button class="md-secondary" ng-click="getServerInfo(server.serverId)">服务器详情</md-button>
                         <md-checkbox class="md-secondary" ng-model="server.wanted"></md-checkbox>
                     </div>
                 </md-list-item>

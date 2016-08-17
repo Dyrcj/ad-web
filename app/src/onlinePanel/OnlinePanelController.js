@@ -2,39 +2,39 @@
     'use strict';
 
     angular.module('onlinePanel')
-        .controller('onlinePanelMainController', function ($scope, onlinePanelService, $mdBottomSheet, $mdDialog, subpub) {
+        .controller('onlinePanelMainController', function ($scope, onlinePanelService, $mdBottomSheet, $mdDialog) {
             var thisServerInfo;
-            var thisServerID;
             $scope.loaded = false;
+            //$scope.serverInfoLoaded = true;
             onlinePanelService
                 .loadAllBusinesses()
                 .then(function (Businesses) {
                     $scope.Businesses = [].concat(Businesses);
                     $scope.loaded = true;
+                })
+                .catch(function (err) {
+                    console.log(err);
+                    $scope.loaded = true;
                 });
             //$scope.serverInfo = thisServerInfo;
-            subpub.subscribe({
-                collectionName: 'serverinfo',
-                userId: 'test',
-                modelId: 'admin'
-            }, function (result) {
-                console.log(result);
-                $scope.log = result;
-                $scope.$apply();
-            });
             $scope.getServerInfo = function (serverID) {
-                console.log(serverID);
+                $scope.loaded = false;
                 onlinePanelService.getRemoteServerInfo(serverID)
                     .then(function (serverInfo) {
                         thisServerInfo = serverInfo;
+                        $scope.loaded = true;
                         $mdBottomSheet.show({
                             controllerAs: "ctrl",
                             templateUrl: '/app/src/onlinePanel/view/ServerInfo.html',
                             controller: ContactSheetController,
                             parent: angular.element(document.getElementById('content'))
-                        }).then(function (clickedItem) {
-                            $scope.alert = clickedItem['name'] + ' clicked!';
+                        }).then(function () {
+
                         });
+                    })
+                    .catch(function (err) {
+                        console.log(err);
+                        $scope.loaded = true;
                     });
             };
             $scope.createBusiness = function (ev) {
@@ -66,9 +66,6 @@
                 };
                 $scope.cancel = function () {
                     $mdDialog.cancel();
-                };
-                $scope.answer = function (answer) {
-                    $mdDialog.hide(answer);
                 };
 
                 $scope.check_email = "";
@@ -105,9 +102,32 @@
                 }
             }
 
-            function ContactSheetController($scope, subpub) {
-                //this.serverInfo = thisServerInfo;
-
+            function ContactSheetController($scope, $sessionStorage, subpub) {
+                console.log(JSON.stringify(thisServerInfo));
+                $scope.serverInfo = thisServerInfo;
+                $scope.openServer = function (serverId) {
+                    onlinePanelService.openRemoteServer(serverId)
+                        .then(function (result) {
+                            console.log(JSON.stringify(result));
+                        });
+                };
+                $scope.closeServer = function (serverId) {
+                    onlinePanelService.closeRemoteServer(serverId)
+                        .then(function (result) {
+                            console.log(JSON.stringify(result));
+                        });
+                };
+                subpub.subscribe({
+                    collectionName: 'serverinfo',
+                    userId: $sessionStorage.userInfo.user_id,
+                    modelId: thisServerInfo.serverId
+                }, function (result) {
+                    $scope.serverInfo.status = result.status;
+                    $scope.serverInfo.log = result.log;
+                    $scope.serverInfo.version = result.version;
+                    $scope.$apply();
+                    //console.log(JSON.stringify($scope.serverInfo));
+                });
                 /*this.serverID = thisServerID;*/
             };
         });

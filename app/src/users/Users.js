@@ -6,9 +6,10 @@
       .config(function ($stateProvider, $urlRouterProvider) {
           $urlRouterProvider.otherwise("/");
           $stateProvider
-              .state('state1', {
-                  url: "state1",
-                  templateUrl: '/app/src/users/view/contactSheet.html'
+              .state('login', {
+                  url: "/login",
+                  templateUrl: '/app/src/users/view/login.html',
+                  controller: 'UserController'
               });
       });
 

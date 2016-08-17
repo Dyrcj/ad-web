@@ -1,0 +1,49 @@
+<md-dialog aria-label="Mango (Fruit)">
+    <div layout="row">
+        <md-input-container class="md-block">
+            <label>搜索框</label>
+            <input ng-model="input">
+        </md-input-container>
+    </div>
+    <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
+    <div layout="row">
+        <div flex>
+            <md-list flex>
+                <md-list-item ng-repeat="business in businessList | filter:input" class="md-2-line">
+                    <div class="md-list-item-text">
+                        <md-card>
+                            <h4>描述：{{ business.description }}</h4>
+                            <h4>审核类型：{{ business.audit_type }}</h4>
+                            <h4>git名称：{{ business.git_name }}</h4>
+                            <h4>项目负责人：{{ business.pm }}</h4>
+                            <h4>审核邮件：{{ business.audit_email }}</h4>
+                            <h4>业务名称：{{ business.name }}</h4>
+                            <md-checkbox class="md-secondary" ng-model="business.checkValue" ng-init="business.checkValue=true"></md-checkbox>
+                        </md-card>
+                    </div>
+                </md-list-item>
+            </md-list>
+            <md-list flex>
+                <md-list-item ng-repeat="business in noAuthBusinessList | filter:input" class="md-2-line">
+                    <div class="md-list-item-text">
+                        <md-card>
+                            <h4>描述：{{ business.description }}</h4>
+                            <h4>审核类型：{{ business.audit_type }}</h4>
+                            <h4>git名称：{{ business.git_name }}</h4>
+                            <h4>项目负责人：{{ business.pm }}</h4>
+                            <h4>审核邮件：{{ business.audit_email }}</h4>
+                            <h4>业务名称：{{ business.name }}</h4>
+                            <md-checkbox class="md-secondary" ng-model="business.checkValue" ng-init="business.checkValue=false">
+                            </md-checkbox>
+                        </md-card>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </div>
+    </div>
+    <div class="md-actions" layout="row" flex>
+        <span flex></span>
+        <md-button ng-click="answer('not useful')"> Cancel </md-button>
+        <md-button ng-click="doAddBusinessForUser()" class="md-primary"> Save </md-button>
+    </div>
+</md-dialog>

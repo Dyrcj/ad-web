@@ -25,27 +25,15 @@
 
 <body ng-app="starterApp" layout="column" ng-controller="baseController as bl" ng-cloak>
 
-
-<!--<div flex layout="row">-->
-
-<!--<md-sidenav  ng-click="ul.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" class="md-whiteframe-z2" >
-  <md-list>
-    <md-list-item ng-repeat="it in ul.users">
-        <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
-          <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
-          {{it.name}}
-        </md-button>
-    </md-list-item>
-  </md-list>
-</md-sidenav>-->
 <md-toolbar layout="row">
-    <md-button class="menu" hide-gt-sm ng-click="bl.toggleList()" aria-label="Show User List">
+    <md-button class="menu" hide-gt-sm aria-label="Show User List">
         <md-icon md-svg-icon="menu"></md-icon>
     </md-button>
     <h1>自动上线</h1>
+    <md-button ng-click="logout()">退出登录</md-button>
 </md-toolbar>
 <md-content layout="row" flex>
-    <md-sidenav ng-click="bl.toggleList()" md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15">
+    <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15">
         <md-list>
             <!--<md-list-item>
                 <md-button ui-sref="managePanel">管理面板</md-button>
@@ -63,7 +51,7 @@
                 <md-button ui-sref="state5">系统配置</md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="state6">用户管理</md-button>
+                <md-button ui-sref="person">用户管理</md-button>
             </md-list-item>
             <md-list-item>
                 <md-button ui-sref="state7">统计报表</md-button>
@@ -71,7 +59,6 @@
             <md-list-item>
                 <md-button ui-sref="state8">操作日志</md-button>
             </md-list-item>
-
         </md-list>
     </md-sidenav>
 
@@ -95,6 +82,7 @@
 <script src="../node_modules/angular-socket-io/socket.js"></script>
 <script src="../node_modules/ngstorage/ngStorage.js"></script>
 <script src="../node_modules/jquery/dist/jquery.js"></script>
+<script src="../node_modules/angular-jwt/dist/angular-jwt.js"></script>
 <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
 
 <!--<script src="./src/users/Users.js"></script>
@@ -104,6 +92,14 @@
 <script src="./src/managePanel/ManagePanel.js"></script>
 <script src="./src/managePanel/ManagePanelController.js"></script>
 <script src="./src/managePanel/ManagePanelService.js"></script>
+
+<script src="./src/users/Users.js"></script>
+<script src="./src/users/UserController.js"></script>
+<script src="./src/users/UserService.js"></script>
+
+<script src="./src/persons/person.js"></script>
+<script src="./src/persons/personController.js"></script>
+<script src="./src/persons/personService.js"></script>
 
 <script src="./src/onlinePanel/OnlinePanel.js"></script>
 <script src="./src/onlinePanel/OnlinePanelController.js"></script>
