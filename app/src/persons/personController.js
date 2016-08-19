@@ -23,7 +23,7 @@
                 controller: addBussinessForPersonCtrl,
                 templateUrl: '/app/src/persons/view/addBussinessForPerson.html',
                 targetEvent: ev,
-                locals: {userId:userId}
+                locals: {userId: userId}
             }).then(function(answer) {
                 //alert('You said the information was "' + answer + '".');
                 //查询数据库进行更新

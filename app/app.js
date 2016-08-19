@@ -72,14 +72,12 @@ angular
                 return $q.reject(rejection);
             },
             request: function (config) {
-                //var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNTdhODIwMjk3MTIyYjZmMzA1YTA1ZWE1IiwibmFtZSI6InVzZXIyIiwiZW1haWwiOiJ1c2VyMjJAeWVlcGF5LmNvbSIsImlzX2FkbWluIjp0cnVlLCJwaG9uZSI6MTgzNjYxMTEwMDIsImlhdCI6MTQ3MTMyODIyNiwiZXhwIjoxNDcxNDE0NjI2fQ.ot54Ou6QVxF7C0qrDzvd6E9NBJHwoVeZO5kSa0qIO-w";
-                //$sessionStorage.token = token;
                 config.headers = config.headers || {};
                 config.headers["Content-Type"] = "application/x-www-form-urlencoded";
-                console.log('test');
                 if ($sessionStorage.token) {
                     config.headers.token = $sessionStorage.token;
                 }
+                console.log($sessionStorage.token);
                 console.log(config.headers.token);
                 return config;
             }

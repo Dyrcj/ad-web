@@ -26,7 +26,7 @@
               if(result['data']['success']) {
                   defer.$$resolve(result['data']['token']);
               } else {
-                  defer.$$resolve(result['data']['message']);
+                  defer.$$reject(result['data']['message']);
               }
           }).catch(function (err) {
               defer.$$reject(err);

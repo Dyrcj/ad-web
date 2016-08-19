@@ -19,11 +19,12 @@
             }
             userService.userLogin(data_msg)
                 .then(function (result) {
-                    alert(result);
                     $sessionStorage.token = result;
                     var tokenJSON = jwtHelper.decodeToken(result);
                     $sessionStorage.userInfo = tokenJSON;
                     $state.go('onlinePanel');
+                }).catch(function (err) {
+                    alert(err);
                 });
         }
     }

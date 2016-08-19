@@ -29,10 +29,11 @@
                 </md-list-item>
                 <md-divider></md-divider>
                 <md-grid-tile-footer>
-                    <md-button class="md-secondary" ng-click="null">提交内测</md-button>
+                    <md-button class="md-secondary" ng-click="innerTest(Business)">提交内测</md-button>
                     <md-button class="md-secondary" ng-click="null">一键上线</md-button>
                     <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
                     <md-button class="md-secondary" ng-click="null">业务详情</md-button>
+                    <md-button>{{Business.operations[0].operation_name}}</md-button>
                 </md-grid-tile-footer>
             </md-list>
         </div>
@@ -60,10 +61,11 @@
                 </md-list-item>
                 <md-divider></md-divider>
                 <md-grid-tile-footer>
-                    <md-button class="md-secondary" ng-click="null">提交内测</md-button>
+                    <md-button class="md-secondary" ng-click="innerTest(Business)">提交内测</md-button>
                     <md-button class="md-secondary" ng-click="null">一键上线</md-button>
                     <md-button class="md-secondary" ng-click="null">一键回滚</md-button>
                     <md-button class="md-secondary" ng-click="null">业务详情</md-button>
+                    <md-button style="color: indianred">{{Business.operations[0].operation_name}}</md-button>
                 </md-grid-tile-footer>
             </md-list>
         </div>
