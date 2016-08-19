@@ -6,8 +6,9 @@
             $urlRouterProvider.otherwise("/");
             $stateProvider
                 .state('managePanel', {
-                    url: "managePanel",
-                    templateUrl: '/app/src/managePanel/view/main.html'
+                    url: "/managePanel",
+                    templateUrl: '/app/src/managePanel/view/main.html',
+                    controller: 'ManagePanelController'
                 });
         });
 })();

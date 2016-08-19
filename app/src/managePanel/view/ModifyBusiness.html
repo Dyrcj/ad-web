@@ -1,0 +1,55 @@
+<md-dialog aria-label="修改业务">
+
+    <md-dialog-content style="width: 550px;height:800px">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>修改业务</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="cancel"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <form name="form_business" novalidate>
+            <div layout="column" layout-padding ng-cloak>
+                <md-content class="md-no-momentum">
+                    <md-input-container style="width: 400px">
+                        <label>业务名称</label>
+                        <input ng-model="business_name" name="name" required>
+                        <span style="color:red" ng-show="form_business.name.$error.required">业务名不能为空</span>
+                    </md-input-container>
+                    <md-input-container style="width: 400px">
+                        <label>Git工程名称</label>
+                        <input ng-model="git_name">
+                    </md-input-container>
+                    <md-input-container style="width: 400px">
+                        <label>项目负责人</label>
+                        <input ng-model="pm">
+                    </md-input-container>
+                    <md-input-container style="width: 400px">
+                        <label>审核方式</label>
+                        <md-select ng-model="check_method" name="type" ng-change="select_check()">
+                            <md-option ng-value="0">邮件审核</md-option>
+                            <md-option ng-value="1">OP审核</md-option>
+                        </md-select>
+                        <span style="color:red" ng-show="form_business.type.$error.required">请选择审核方式</span>
+                    </md-input-container>
+                    <md-input-container style="width: 400px" ng-show="is_email">
+                        <label>审核邮件</label>
+                        <input type="email" name="email" ng-model="check_email">
+                        <span style="color:red" ng-show="is_email&&check_email==''">邮箱不能为空</span>
+                        <span style="color:red" ng-show="form_business.email.$error.email&&is_email">邮箱地址格式不正确</span>
+                    </md-input-container>
+                    <md-input-container style="width: 400px" >
+                        <label>描述</label>
+                        <textarea ng-model="description"></textarea>
+                    </md-input-container>
+                </md-content>
+                <div layout-align="center" layout="row">
+                    <md-button class="md-raised md-primary" ng-disabled="(is_email&&check_email=='')||form_business.name.$invalid||form_business.type.$invalid||form_business.email.$invalid" style="width:20px" ng-click="submit_create()">提交</md-button>
+                </div>
+
+            </div>
+        </form>
+    </md-dialog-content>
+</md-dialog>

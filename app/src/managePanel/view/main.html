@@ -1,10 +1,31 @@
-<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
-    <md-nav-item md-nav-click="goto('page1')" name="page1">Page One</md-nav-item>
-    <md-nav-item md-nav-click="goto('page2')" name="page2">Page Two</md-nav-item>
-    <md-nav-item md-nav-click="goto('page3')" name="page3">Page Three</md-nav-item>
-    <!-- these require actual routing with ui-router or ng-route, so they won't work in the demo
-    <md-nav-item md-nav-sref="app.page4" name="page4">Page Four</md-nav-item>
-    <md-nav-item md-nav-href="#page5" name="page5">Page Five</md-nav-item>
-    -->
-</md-nav-bar>
-<span>ddd</span>
+<md-button ng-click="createBusiness()" class="md-raised" style="background:lightslategray;color:white;box-shadow:3px 2px 4px #333333">
+    新建业务
+</md-button>
+<div layout="column" ng-cloak>
+    <md-content flex layout-padding style="text-align:center">
+        <div layout="row" style="font-size:20px;background:grey;box-shadow:4px 2px 6px #333333;color:white;border-radius:5px 5px 0 0">
+            <div flex>业务名</div>
+            <div flex>版本号</div>
+            <div flex>git名称</div>
+            <div flex>上线次数</div>
+            <div flex>最近一次上线</div>
+            <div flex>操作</div>
+        </div>
+        <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+        <div layout="row" style="background:white;font-size:15px;box-shadow:4px 2px 6px #333333;" ng-repeat="business in Businesses">
+            <div flex><a href="#" ng-click="AssociateBusiness(business.business_id)">{{business.name}}</a></div>
+            <div flex>{{business.current_version}}</div>
+            <div flex>{{business.git_name}}</div>
+            <div flex>{{business.online_times}}</div>
+            <div flex>{{business.last_online_time}}</div>
+            <div flex>
+                <span style="cursor:pointer" ng-click="modifyBusiness(business.business_id)">
+                    修改
+                </span>/
+                <span style="cursor:pointer" ng-click="deleteBusiness(business.business_id)">
+                    删除
+                </span>
+            </div>
+        </div>
+    </md-content>
+</div>

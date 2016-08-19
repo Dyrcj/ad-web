@@ -1,0 +1,82 @@
+<md-dialog>
+
+    <md-dialog-content style="width:850px;height:800px">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>业务相关信息</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="cancel"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div layout="column" layout-padding>
+            <div style="padding:20px;text-align:center">
+                <div layout="row" style="padding:10px;font-size:18px;background:grey;box-shadow:4px 2px 6px #333333;color:white;border-radius:5px 5px 0 0">
+                    服务器信息
+                </div>
+                <div layout="row" style="padding:3px;background:whitesmoke;font-size:18px;box-shadow:4px 2px 6px #333333;">
+                    <div ng-show="is_delete">
+                        <md-checkbox ng-checked="isChecked()" ng-click="toggleAll()" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
+                    </div>
+                    <div flex>服务器名称</div>
+                    <div flex>服务器类型</div>
+                    <div flex>服务器IP</div>
+                    <div flex>版本</div>
+                    <div flex>状态</div>
+                </div>
+                <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+                <div layout="row" style="padding:3px;background:white;font-size:18px;box-shadow:4px 2px 6px #333333;" ng-repeat="server in Servers" >
+                    <div ng-show="is_delete">
+                        <md-checkbox ng-checked="exists(server.server_id,selected)" ng-click="toggle(server.server_id,selected)" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
+                    </div>
+                    <div flex>{{server.server_name}}</div>
+                    <div flex>{{server.server_type}}</div>
+                    <div flex>{{server.server_ip}}</div>
+                    <div flex>{{server.version}}</div>
+                    <div flex>{{server.status}}</div>
+                </div>
+                <!--<form name="form_server" novalidate>-->
+                    <div layout="row" ng-show="is_add" style="padding:3px;background:white;font-size:18px;box-shadow:4px 2px 6px #333333;">
+                        <div flex><input type="text" ng-model="name" style="width:90%" required></div>
+                        <div flex>
+                            <md-input-container style="margin-top:0px;margin-bottom: 0px">
+                                <md-select ng-model="type">
+                                    <md-option value="0">test</md-option>
+                                    <md-option value="1">production</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div flex><input type="text" ng-model="ip" style="width:90%"></div>
+                        <div flex><input type="text" style="width:90%" disabled></div>
+                        <div flex><input type="text" style="width:90%" disabled></div>
+                    </div>
+                <!--</form>-->
+                <md-button ng-show="!is_add&&!is_delete" ng-click="addServer()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    添加
+                </md-button>
+                <md-button ng-show="!is_add&&!is_delete" ng-click="deleteServer()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    删除
+                </md-button>
+                <md-button ng-show="is_add||is_delete" ng-click="operation()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    提交
+                </md-button>
+                <md-button ng-show="is_add||is_delete" ng-click="remove()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    取消
+                </md-button>
+            </div>
+            <div style="padding:20px;text-align:center">
+                <div layout="row" style="padding:10px;font-size:18px;background:grey;box-shadow:4px 2px 6px #333333;color:white;border-radius:5px 5px 0 0">
+                    F5信息
+                </div>
+                <div layout="row" style="padding:3px;background:whitesmoke;font-size:18px;box-shadow:4px 2px 6px #333333;">
+                    <div flex="20">业务名</div>
+                    <div flex="20">版本号</div>
+                    <div flex="20">git名称</div>
+                    <div flex="20">上线次数</div>
+                    <div flex="20">最近一次上线</div>
+                </div>
+            </div>
+        </div>
+    </md-dialog-content>
+</md-dialog>
