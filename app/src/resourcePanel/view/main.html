@@ -1,0 +1,33 @@
+<md-content>
+    <div style="border-bottom:1px solid lightgray;margin-bottom:10px">
+        <h2 style="margin-bottom:0px">负载均衡管理</h2>
+    </div>
+    <md-button ng-click="addLB()" class="md-raised" style="width:120px;background:lightslategray;color:white;box-shadow:3px 2px 4px #333333">
+        新建负载均衡
+    </md-button>
+    <div layout="column" ng-cloak>
+        <md-content flex layout-padding style="text-align:center">
+            <div layout="row" style="font-size:20px;background:grey;box-shadow:4px 2px 6px #333333;color:white;border-radius:5px 5px 0 0">
+                <div flex>IP</div>
+                <div flex>端口</div>
+                <div flex>用户名</div>
+                <div flex>设备类型</div>
+                <div flex>描述</div>
+                <div flex>操作</div>
+            </div>
+            <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+            <div layout="row" style="background:white;font-size:15px;box-shadow:4px 2px 6px #333333;" ng-repeat="LB in LBs">
+                <div flex><span style="color:blue;text-decoration:underline;cursor:pointer" href="#" ng-click="LBcenter(LB.lb_id)">{{LB.lb_ip}}</span></div>
+                <div flex>{{LB.port}}</div>
+                <div flex>{{LB.user_name}}</div>
+                <div flex>{{LB.lb_type}}</div>
+                <div flex>{{LB.description}}</div>
+                <div flex>
+                    <span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="modifyLB(LB.lb_id)">修改</span> /
+                    <span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="deleteLB(LB.lb_id)">删除</span>
+                </div>
+            </div>
+        </md-content>
+    </div>
+
+</md-content>

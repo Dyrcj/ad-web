@@ -1,34 +1,28 @@
-<md-bottom-sheet class="md-has-header" ng-cloak flex>
-    <md-subheader class="md-primary md-no-sticky" ng-style="{'background': 'pink'}">{{serverInfo.serverName}}
-    </md-subheader>
-    <div flex layout="row" style="max-height: 500px">
-        <div flex style="overflow: scroll;">
-            <md-list flex>
-                <md-list-item flex>
-                    <md-button flex>{{serverInfo.status}}</md-button>
-                    <md-button flex>{{serverInfo.version}}</md-button>
-                    <md-button flex>{{serverInfo.serverIp}}</md-button>
-                    <md-select flex ng-model="ctrl.serverInfo.state">
-                        <md-option ng-repeat="state in serverInfo.gitVersionList" value="{{state}}"
-                                   ng-disabled='state == serverInfo.version'>
-                            {{state}}
-                        </md-option>
-                    </md-select>
-                </md-list-item>
-                <md-list-item flex>
-                    <md-button ng-click="openServer(serverInfo.serverId)">开启服务器</md-button>
-                    <md-button ng-click="closeServer(serverInfo.serverId)">关闭服务器</md-button>
-                    <md-button>上线</md-button>
-                    <md-button>回滚到指定版本</md-button>
-                </md-list-item>
-            </md-list>
-        </div>
-        <md-divider></md-divider>
-        <div flex style="overflow: scroll;">
-            <md-input-container>
-                <label flex>Tomcat Log</label>
-                <textarea disabled flex style="width: 800px">{{serverInfo.log}}</textarea>
-            </md-input-container>
-        </div>
+<md-bottom-sheet layout="row"  flex style="max-height: 500px">
+    <md-card flex>
+        <md-card-title >
+            <md-card-title-text>
+                <span class="md-headline">{{serverInfo.server_name}}</span>
+                <span class="md-subhead">{{serverInfo.server_ip}}</span>
+                <span class="md-subhead">{{serverInfo.status}}</span>
+                <span class="md-subhead">{{serverInfo.version}}</span>
+            </md-card-title-text>
+
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="start center" >
+            <md-button ng-click="openServer(serverInfo.server_id)">开启服务器</md-button>
+            <md-button ng-click="closeServer(serverInfo.server_id)">关闭服务器</md-button>
+        </md-card-actions>
+        <md-card-content style="overflow: scroll;" layout="column" md-colors="{'background': 'light-blue-100'}" >
+                <!--<div md-colors="{'background': 'light-blue-100'}" ng-repeat="operation in serverInfo.operationStatus">-->
+                    <span ng-repeat="operation in serverInfo.operationStatus">{{operation}}</span>
+                <!--</div>-->
+        </md-card-content>
+    </md-card>
+    <div flex style="overflow: scroll;">
+        <md-input-container>
+            <label flex>Tomcat Log</label>
+            <textarea disabled flex style="width: 800px">{{serverInfo.log}}</textarea>
+        </md-input-container>
     </div>
 </md-bottom-sheet>

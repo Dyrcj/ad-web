@@ -16,6 +16,8 @@
     "angular-messages": "^1.5.5",
     "angular-socket-io": "^0.7.0",
     "angular-ui-router": "^0.3.1",
+    "grunt": "^1.0.1",
+    "grunt-ng-constant": "^2.0.1",
     "jquery": "^3.1.0",
     "ngstorage": "^0.3.11",
     "socket.io": "^1.4.8"

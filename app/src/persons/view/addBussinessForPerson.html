@@ -1,5 +1,5 @@
-<md-dialog aria-label="Mango (Fruit)">
-    <div layout="row">
+<!-- <md-dialog aria-label="Mango (Fruit)" style="min-width:300px;min-height:320px">
+    <div layout="row" layout-padding style="margin:15px;margin-top:0">
         <md-input-container class="md-block">
             <label>搜索框</label>
             <input ng-model="input">
@@ -11,7 +11,7 @@
             <md-list flex>
                 <md-list-item ng-repeat="business in businessList | filter:input" class="md-2-line">
                     <div class="md-list-item-text">
-                        <md-card>
+                        <md-card layout-padding style="background:#dce5f9">
                             <h4>描述：{{ business.description }}</h4>
                             <h4>审核类型：{{ business.audit_type }}</h4>
                             <h4>git名称：{{ business.git_name }}</h4>
@@ -22,11 +22,9 @@
                         </md-card>
                     </div>
                 </md-list-item>
-            </md-list>
-            <md-list flex>
                 <md-list-item ng-repeat="business in noAuthBusinessList | filter:input" class="md-2-line">
                     <div class="md-list-item-text">
-                        <md-card>
+                        <md-card layout-padding style="background:#dce5f9">
                             <h4>描述：{{ business.description }}</h4>
                             <h4>审核类型：{{ business.audit_type }}</h4>
                             <h4>git名称：{{ business.git_name }}</h4>
@@ -38,12 +36,77 @@
                         </md-card>
                     </div>
                 </md-list-item>
+                <div class="md-actions" layout="row" flex>
+                    <span flex></span>
+                    <md-button ng-click="answer('not useful')"> Cancel </md-button>
+                    <md-button ng-click="doAddBusinessForUser()" class="md-primary"> Save </md-button>
+                </div>
             </md-list>
         </div>
     </div>
-    <div class="md-actions" layout="row" flex>
-        <span flex></span>
-        <md-button ng-click="answer('not useful')"> Cancel </md-button>
-        <md-button ng-click="doAddBusinessForUser()" class="md-primary"> Save </md-button>
-    </div>
+</md-dialog> -->
+
+<md-dialog>
+    <md-dialog-content style="width:950px;height:900px">
+      <md-toolbar>
+          <div class="md-toolbar-tools">
+              <h2>业务授权</h2>
+              <span flex></span>
+              <md-button class="md-icon-button" ng-click="cancel()">
+                  <ng-md-icon icon="cancel"></ng-md-icon>
+              </md-button>
+          </div>
+      </md-toolbar>
+      <md-input-container class="md-block" style="margin-bottom:0">
+          <label>搜索框</label>
+          <input ng-model="input" style="margin-bottom:0">
+      </md-input-container>
+      <div layout="column" layout-padding>
+        <div style="padding:20px;text-align:center">
+            <div layout="row" style="padding:10px;font-size:18px;background:grey;box-shadow:4px 2px 6px #333333;color:white;border-radius:5px 5px 0 0">
+              <div flex>业务名称</div>
+              <div flex>git名称</div>
+              <div flex>项目负责人</div>
+              <div flex>描述</div>
+              <md-checkbox style="margin-left:10px;margin-bottom: 0px;visibility:hidden"></md-checkbox>
+            </div>
+            <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+            <div layout="row" style="padding:3px;background:white;font-size:18px;box-shadow:4px 2px 6px #333333;" ng-repeat="business in businessList | filter:input">
+                <div flex>{{business.name}}</div>
+                <div flex>{{business.git_name}}</div>
+                <div flex>{{business.pm}}</div>
+                <div flex>
+                    <md-menu>
+                        <ng-md-icon icon="description" ng-click="openMenu($mdOpenMenu, $event)"></ng-md-icon>
+                        <md-menu-content layout-padding style="background:rgba(0,0,0,0.8);color:rgb(242, 241, 246);max-width:250px;max-height:200px;word-wrap: break-word;white-space:normal">
+                            <div>
+                                {{business.description}}
+                            </div>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
+                <md-checkbox style="margin-left:10px;margin-bottom: 0px" ng-model="business.checkValue" ng-init="business.checkValue=true"></md-checkbox>
+            </div>
+            <div layout="row" style="padding:3px;background:white;font-size:18px;box-shadow:4px 2px 6px #333333;" ng-repeat="business in noAuthBusinessList | filter:input">
+                <div flex>{{business.name}}</div>
+                <div flex>{{business.git_name}}</div>
+                <div flex>{{business.pm}}</div>
+                <div flex>
+                    <md-menu>
+                        <ng-md-icon icon="description" ng-click="openMenu($mdOpenMenu, $event)"></ng-md-icon>
+                        <md-menu-content layout-padding style="background:rgba(0,0,0,0.8);color:rgb(242, 241, 246);max-width:250px;max-height:200px;word-wrap: break-word;white-space:normal">
+                            <div>
+                                {{business.description}}
+                            </div>
+                        </md-menu-content>
+                    </md-menu>
+                </div>
+                <md-checkbox style="margin-left:10px;margin-bottom: 0px" ng-model="business.checkValue" ng-init="business.checkValue=false"></md-checkbox>
+            </div>
+            <md-button style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                保存
+            </md-button>
+          </div>
+      </div>
+    </md-dialog-content>
 </md-dialog>

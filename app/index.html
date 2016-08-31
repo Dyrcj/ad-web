@@ -29,23 +29,21 @@
     <md-button class="menu" hide-gt-sm aria-label="Show User List">
         <md-icon md-svg-icon="menu"></md-icon>
     </md-button>
-    <h1>自动上线</h1>
-    <md-button ng-click="logout()">退出登录</md-button>
+    <h1 style="margin-left:10px">自动上线</h1>
+    <span flex></span>
+    <md-button  ng-click="logout()">退出登录</md-button>
 </md-toolbar>
 <md-content layout="row" flex>
     <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15">
-        <md-list>
-            <!--<md-list-item>
-                <md-button ui-sref="managePanel">管理面板</md-button>
-            </md-list-item>-->
+        <md-list flex>
             <md-list-item>
                 <md-button ui-sref="onlinePanel">上线面板</md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="managePanel">业务中心</md-button>
+                <md-button  ui-sref="managePanel">业务中心</md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="state4">资源中心</md-button>
+                <md-button ui-sref="resourcePanel">资源中心</md-button>
             </md-list-item>
             <md-list-item>
                 <md-button ui-sref="state5">系统配置</md-button>
@@ -85,9 +83,8 @@
 <script src="../node_modules/angular-jwt/dist/angular-jwt.js"></script>
 <script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
 
-<!--<script src="./src/users/Users.js"></script>
-<script src="./src/users/UserController.js"></script>
-<script src="./src/users/UserService.js"></script>-->
+<!-- <script src="./config.js"></script> -->
+<script src="../config.js"></script>
 
 <script src="./src/managePanel/ManagePanel.js"></script>
 <script src="./src/managePanel/ManagePanelController.js"></script>
@@ -104,6 +101,13 @@
 <script src="./src/onlinePanel/OnlinePanel.js"></script>
 <script src="./src/onlinePanel/OnlinePanelController.js"></script>
 <script src="./src/onlinePanel/OnlinePanelService.js"></script>
+
+<script src="./src/sso/sso.js"></script>
+<script src="./src/sso/ssoController.js"></script>
+
+<script src="./src/resourcePanel/ResourcePanel.js"></script>
+<script src="./src/resourcePanel/ResourcePanelController.js"></script>
+<script src="./src/resourcePanel/ResourcePanelService.js"></script>
 
 <script type="text/javascript" src="app.js"></script>
 

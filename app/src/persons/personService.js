@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('person')
-        .service('personService', ['$q', '$http', personService]);
+        .service('personService', ['$q', '$http','ENV', personService]);
 
     /**
      * Users DataService
@@ -13,11 +13,16 @@
      * @constructor
      */
 
-    function personService($q, $http) {
+    function personService($q, $http, ENV) {
+        var ad_config = {
+          ip: ENV.main_server.ip,
+          port: ENV.main_server.port
+        }
+
         function queryAllPerson() {
             var defer = $q.defer();
             $http.get(
-                'http://172.17.106.21:4200/user'
+                'http://' + ad_config.ip + ':' + ad_config.port + '/user'
             ).then(function (result) {
                     defer.$$resolve(result['data']['message']);
                 }).catch(function (err) {
@@ -29,7 +34,7 @@
         function queryBussinessByUser(userId){
             var defer = $q.defer();
             $http.get(
-                'http://172.17.106.21:4200/user/business/' + userId
+                'http://' + ad_config.ip + ':' + ad_config.port + '/user/business/' + userId
             ).then(function (result) {
                     defer.$$resolve(result['data']);
                 }).catch(function (err) {

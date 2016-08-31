@@ -109,6 +109,26 @@
             return defer.promise;
         }
 
+        function postTestStatus(data) {
+            var defer = $q.defer();
+            var url = 'http://172.17.106.21:4200/online/testStatus';
+            $http.post(url,$.param(data))
+                .then(function (result) {
+                    console.log(result);
+                    if(result['data']['success']) {
+                        defer.$$resolve(result['data']['message']);
+                    } else {
+                        console.log(result['data']['message']);
+                        defer.$$reject(result['data']['message']);
+                    }
+                    console.log(JSON.stringify(result));
+
+                }).catch(function (err) {
+                defer.$$reject(err);
+            });
+            return defer.promise;
+        }
+
         // Promise-based API
         return {
             innerTest: function (data) {
@@ -129,6 +149,9 @@
             },
             createBusiness: function (data) {
                 return postBusiness(data);
+            },
+            testStatus: function (data) {
+                return postTestStatus(data);
             }
         };
     }

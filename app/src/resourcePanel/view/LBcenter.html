@@ -1,0 +1,118 @@
+<md-dialog>
+
+    <md-dialog-content style="width:800px;height:800px">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>负载均衡中心</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <ng-md-icon icon="cancel"></ng-md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <div layout="column" layout-padding>
+<!-- 池信息 -->
+            <div style="padding:20px;text-align:center;width:600px;margin:0 auto">
+                <div layout="row" style="padding:10px;font-size:18px;background:grey;box-shadow:4px 2px 6px #333333;color:white;border-radius:5px 5px 0 0">
+                    池信息
+                </div>
+                <div layout="row" style="padding:3px;background:whitesmoke;font-size:18px;box-shadow:4px 2px 6px #333333;">
+                    <div ng-show="del_pool">
+                        <md-checkbox ng-checked="isChecked()" ng-click="toggleAll()" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
+                    </div>
+                    <div flex="20">池名称</div>
+                    <div flex>描述</div>
+                </div>
+                <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+                <div layout="column" style="padding:3px;background:white;font-size:18px;box-shadow:4px 2px 6px #333333;" ng-repeat="pl in Pools" >
+                    <div layout="row">
+                        <div ng-show="del_pool">
+                            <md-checkbox ng-checked="exists(pl.pool_name,selectedPools)" ng-click="toggle(pl.pool_name,selectedPools)" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
+                        </div>
+                        <div flex="20">
+                            {{pl.pool_name}}
+                            <ng-md-icon style="cursor:pointer" ng-show="show_ip" ng-click="toggleIp()" size="16" icon="expand_more"></ng-md-icon>
+                            <ng-md-icon style="cursor:pointer" ng-show="!show_ip" ng-click="toggleIp()" size="16" icon="expand_less"></ng-md-icon>
+                        </div>
+                        <div flex>{{pl.description}}</div>
+                    </div>
+                    <div ng-show="!show_ip" layout-padding style="background:rgb(224, 243, 244);font-size:18px">
+                        <div layout="row">
+                            <div flex>成员</div>
+                            <div flex="30">操作</div>
+                            <div flex="30">状态</div>
+                        </div>
+                        <div layout="row" ng-repeat="ips in IPs">
+                            <div flex>
+                                <span>{{ips.ip}}</span>:
+                                <span>{{ips.port}}</span>
+                            </div>
+                            <div flex="30">
+                                <md-switch ng-model="ip_states[1]" style="width:40px;margin:0 auto;padding:0;height:20px"></md-switch>
+                            </div>
+                            <div flex="30" ng-show="ip_states[1]">对外</div>
+                            <div flex="30" ng-show="!ip_states[1]">对内</div>
+                        </div>
+                        <!-- <div layout="row">
+                            <div flex>
+                                <span>123.223.23.44</span>:
+                                <span>8080</span>
+                            </div>
+                            <div flex="30">
+                                <md-switch ng-model="ip_states[0]" ng-change="submitState()" style="width:40px;margin:0 auto;padding:0;height:20px"></md-switch>
+                            </div>
+                            <div flex="30" ng-show="ip_states[0]">对外</div>
+                            <div flex="30" ng-show="!ip_states[0]">对内</div>
+                        </div>
+                        <div layout="row">
+                            <div flex>
+                                <span>127.23.23.44</span>:
+                                <span>80</span>
+                            </div>
+                            <div flex="30">
+                                <md-switch ng-model="ip_states[1]" style="width:40px;margin:0 auto;padding:0;height:20px"></md-switch>
+                            </div>
+                            <div flex="30" ng-show="ip_states[1]">对外</div>
+                            <div flex="30" ng-show="!ip_states[1]">对内</div>
+                        </div>
+                        <div layout="row">
+                            <div flex>
+                                <span>211.223.231.44</span>:
+                                <span>6666</span>
+                            </div>
+                            <div flex="30">
+                                <md-switch  ng-model="ip_states[2]" style="width:40px;margin:0 auto;padding:0;height:20px"></md-switch>
+                            </div>
+                            <div flex="30" ng-show="ip_states[2]">对外</div>
+                            <div flex="30" ng-show="!ip_states[2]">对内</div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <div ng-show="add_pool" layout-padding style="margin-top:20px;text-align:left;border-radius:5px;background:rgb(242, 242, 235);box-shadow:4px 2px 6px #333333">
+                  <div>
+                      <label style="margin-right:5px">池名称</label>
+                      <input type="text"  name="pool_name" ng-model="pool_name" required>
+                      <span style="color:red" ng-show="is_empty" >池名称不能为空</span>
+                  </div>
+                  <div layout="row">
+                      <label style="margin-right:8px;margin-left:14px">描述</label>
+                      <textarea name="description" ng-model="description" cols="30" rows="5"></textarea>
+                  </div>
+                </div>
+                <md-button ng-show="!add_pool&&!del_pool" ng-click="addPool()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    添加
+                </md-button>
+                <md-button ng-show="!add_pool&&!del_pool" ng-click="deletePool()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    删除
+                </md-button>
+                <md-button ng-show="add_pool||del_pool" ng-click="submitPool()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    提交
+                </md-button>
+                <md-button ng-show="add_pool||del_pool" ng-click="cancelPool()" style="background:lightgray;box-shadow:3px 3px 5px gray;border-radius:5px;margin-top:15px;font-size:15px;cursor:pointer">
+                    取消
+                </md-button>
+            </div>
+
+    </md-dialog-content>
+</md-dialog>

@@ -1,7 +1,7 @@
 (function(){
     'use strict';
     angular.module('person')
-        .controller('personController',['$scope', 'personService', '$mdDialog', personController]);
+        .controller('personController',['$scope','personService', '$mdDialog', personController]);
     function personController($scope,personService,$mdDialog){
 
         $scope.loaded = false;
@@ -22,6 +22,7 @@
             $mdDialog.show({
                 controller: addBussinessForPersonCtrl,
                 templateUrl: '/app/src/persons/view/addBussinessForPerson.html',
+                parent: angular.element(document.getElementById('content')),
                 targetEvent: ev,
                 locals: {userId: userId}
             }).then(function(answer) {
@@ -54,6 +55,27 @@
                     $scope.loaded = true;
                 });
 
+                // $scope.openOffscreen = function(description) {
+                //     $mdDialog.show(
+                //       $mdDialog.alert()
+                //         .clickOutsideToClose(true)
+                //         .title('业务描述')
+                //         .textContent(description)
+                //         .ariaLabel('Offscreen Demo')
+                //         .ok('关闭')
+                //         .openFrom({
+                //           top: -50,
+                //           width: 30,
+                //           height: 80
+                //         })
+                //         .closeTo({
+                //           left: 1500
+                //         })
+                //      );
+                //   };
+                $scope.openMenu = function($mdOpenMenu, ev) {
+                    $mdOpenMenu(ev);
+                };
             $scope.hide = function() {
                 $mdDialog.hide();
             };

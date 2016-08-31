@@ -1,16 +1,18 @@
-<form ng-submit="login()" class="md-whiteframe-z1" layout-align="center" layout="column">
-    <md-toolbar><h2 class="md-toolbar-tools"><span>Login</span></h2></md-toolbar>
-    <md-content class="md-padding" layout="column" flex>
-        <md-input-container flex>
-            <label>UserName</label>
-            <input ng-model="username">
-        </md-input-container>
-        <md-input-container flex>
-            <label>Password</label>
-            <input type="password" ng-model="password" style="padding-top:20px;">
-        </md-input-container>
-        <div layout="row" layout-align="center center">
-            <input type="submit" class="md-button md-raised md-primary" id="submit">
-        </div>
-    </md-content>
-</form>
+<div style="width:40%;margin:100px auto">
+    <form ng-submit="login()" class="md-whiteframe-z1" layout="column">
+        <md-toolbar><h2 class="md-toolbar-tools"><span>Login</span></h2></md-toolbar>
+        <md-content class="md-padding" layout="column" flex>
+            <md-input-container flex>
+                <label>UserName</label>
+                <input ng-model="username">
+            </md-input-container>
+            <md-input-container flex>
+                <label>Password</label>
+                <input type="password" ng-model="password" style="padding-top:20px;">
+            </md-input-container>
+            <div layout="row" layout-align="center center">
+                <input type="submit" class="md-button md-raised md-primary" id="submit">
+            </div>
+        </md-content>
+    </form>
+</div>

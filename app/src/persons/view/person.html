@@ -1,4 +1,3 @@
-<body>
 <div layout="row">
     <md-input-container class="md-block" flex>
         <label>搜索框</label>
@@ -6,32 +5,26 @@
     </md-input-container>
 </div>
 <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
-<div layout="row">
-    <div flex>
-        <md-list flex>
-            <md-list-item ng-repeat="person in personList | filter:input" class="md-2-line">
-                <div class="md-list-item-text">
-                    <md-card>
-                        <h4>姓名：{{ person.name }}</h4>
-                        <h4>描述：{{ person.description }}</h4>
-                        <h4>座机：{{ person.company_phone }}</h4>
-                        <h4>职位：{{ person.position }}</h4>
-                        <h4>部门：{{ person.department }}</h4>
-                        <h4>电话：{{ person.phone }}</h4>
-                        <h4>邮箱：{{ person.email }}</h4>
-                        <h4 ng-show="!person.is_admin">用户级别：普通用户</h4>
-                        <h4 ng-show="person.is_admin">用户级别：管理员</h4>
-                        <md-button class="md-fab md-fab-bottom-right" aria-label="Add" ng-click="showAdd($event,person._id)">
-                            <ng-md-icon icon="add"></ng-md-icon>
-                        </md-button>
-                    </md-card>
-                </div>
-                <md-divider></md-divider>
-            </md-list-item>
-            <md-divider></md-divider>
-        </md-list>
-    </div>
-    <md-divider></md-divider>
-</div>
-</body>
+<div layout="row" layout-wrap>
+    <div flex="33" style="min-width:280px" ng-repeat="person in personList | filter:input" >
+        <md-card layout-padding style="background:#f9fcd4;border-radius:3px">
+            <span>姓名：{{ person.name }}</span>
+            <span>描述：{{ person.description }}</span>
+            <span>座机：{{ person.company_phone }}</span>
+            <span>职位：{{ person.position }}</span>
+            <span>部门：{{ person.department }}</span>
+            <span>电话：{{ person.phone }}</span>
+            <span>邮箱：{{ person.email }}</span>
+            <span ng-show="!person.is_admin">用户级别：普通用户</span>
+            <span ng-show="person.is_admin">用户级别：管理员</span>
+            <div layout="row">
+              <span flex></span>
+              <md-button class="md-fab" ng-click="showAdd($event,person._id)">
+                  <ng-md-icon icon="add" style="font-size:45px;fill:#f5f0f0" size="35"></ng-md-icon>
+              </md-button>
+            </div>
+        </md-card>
 
+    </div>
+
+</div>

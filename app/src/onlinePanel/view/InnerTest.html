@@ -1,10 +1,32 @@
 <md-bottom-sheet class="md-has-header" ng-cloak flex>
-    <md-subheader class="md-primary md-no-sticky" ng-style="{'background': 'pink'}">{{businessInfo.name}}
+    <!--<md-subheader class="md-primary md-no-sticky" ng-style="{'background': 'pink'}">{{businessInfo.name}}
     </md-subheader>
     <div flex style="overflow: scroll;">
         <md-input-container>
             <label flex>Business Status</label>
             <textarea disabled flex style="width: 800px">{{businessInfo.status}}</textarea>
         </md-input-container>
-    </div>
+    </div>-->
+    <md-card flex layout="row">
+        <div flex layout="column">
+            <md-card-title >
+                <md-card-title-text>
+                    <span class="md-headline">{{businessInfo.name}}</span>
+                    <span class="md-subhead">{{serverInfo.server_ip}}</span>
+                    <span class="md-subhead">{{serverInfo.status}}</span>
+                    <span class="md-subhead">{{serverInfo.version}}</span>
+                </md-card-title-text>
+
+            </md-card-title>
+            <md-card-actions layout="row" layout-align="start center" >
+                <md-button ng-click="innerTestSuccess(businessInfo.business_id)">内测成功</md-button>
+                <md-button ng-click="innerTestFailure(businessInfo.business_id)">内测失败</md-button>
+            </md-card-actions>
+        </div>
+        <md-card-content style="overflow: scroll;" flex layout="column" md-colors="{'background': 'light-blue-100'}" >
+            <!--<div md-colors="{'background': 'light-blue-100'}" ng-repeat="operation in serverInfo.operationStatus">-->
+            <span ng-repeat="operation in serverInfo.operationStatus">{{operation}}</span>
+            <!--</div>-->
+        </md-card-content>
+    </md-card>
 </md-bottom-sheet>
