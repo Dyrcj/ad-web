@@ -44,7 +44,7 @@ angular
                     $state.go('onlinePanel');
                 })
                 .catch(function (err) {
-                    alert("err" + err);
+                    alert(err);
                 });
 
 
@@ -129,7 +129,6 @@ angular
                 http,
                 $.param(data)
             ).then(function (result) {
-                //var result = JSON.stringify(result);
                 console.log(result);
                 if(result['data']['success']) {
                     defer.$$resolve(result['data']['token']);
