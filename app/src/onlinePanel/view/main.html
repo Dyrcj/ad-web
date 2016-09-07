@@ -3,58 +3,66 @@
         <label>搜索框</label>
         <input ng-model="input">
     </md-input-container>
-    <!--<md-button ng-click="createBusiness()" ng-style="{'background': 'lightgreen'}" style="height: 10px">新建业务</md-button>-->
 </div>
 <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
-<!--<div layout="row">-->
 <div flex>
-    <!--<div flex>-->
-        <div ng-repeat="Business in Businesses | filter:input">
-            <!--<md-list flex ng-if="$even">-->
-                <md-subheader md-colors="{'background': 'light-blue-200'}" class="md-no-sticky">
-                    {{Business.name}}
-                </md-subheader>
-                <md-list-item class="md-2-line" ng-repeat="server in Business.servers | orderBy: '-server_type'" ng-click="null">
-                    <div layout="row" layout-align="end center" class="md-list-item-text">
-                        <div layout="column">
-                            <h3>{{ server.server_name }}</h3>
-                            <h4>{{ server.status }}</h4>
-                            <!-- <p>{{ server.version }}</p> -->
-                            <p>{{ server.server_ip }}:{{ server.server_port }}</p>
-                        </div>
-                        <span class="md-secondary" ng-if="server.server_type == 'test'" ng-style="{'color':'orange'}">内测服务器</span>
-                        <span class="md-secondary" ng-if="server.server_type == 'production'" ng-style="{'color':'red'}">生产服务器</span>
-                        <md-button class="md-secondary" ng-click="getServerInfo(server.server_id)">服务器详情</md-button>
-                        <div flex>
-                            <md-menu>
-                                <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">{{server.operationStatus[server.operationStatus.length - 1]}}</md-button>
-                                <md-menu-content>
-                                    <md-menu-item ng-repeat="operation in server.operationStatus">
-                                        <span>{{operation}}</span>
-                                    </md-menu-item>
-                                </md-menu-content>
-                            </md-menu>
-                        </div>
-                        <md-checkbox class="md-secondary" ng-model="server.wanted"></md-checkbox>
-                    </div>
-                </md-list-item>
-                <md-divider></md-divider>
-                <md-grid-tile-footer>
-                    <md-button class="md-secondary" ng-click="innerTest(Business)">提交内测</md-button>
-                    <md-button class="md-secondary" ng-click="null">一键上线</md-button>
-                    <md-button class="md-secondary" ng-click="null">回滚</md-button>
-                    <md-button class="md-secondary" ng-click="null">业务详情</md-button>
+    <div ng-repeat="Business in Businesses | filter:input">
+        <md-subheader md-colors="{'background': 'light-blue-200'}" class="md-no-sticky" layout="row">
+            <span>{{Business.name}}</span>
+            <md-divider></md-divider>
+            <span>{{Business.version}}</span>
+        </md-subheader>
+        <md-radio-group ng-model="onlineSelect">
+        <md-list-item class="md-2-line" ng-repeat="server in Business.servers | orderBy: '-server_type'"
+                      ng-click="null">
+            <div layout="row" layout-align="end center" class="md-list-item-text">
+                <div layout="column">
+                    <h3>{{ server.server_name }}</h3>
+                    <h4>{{ server.status }}</h4>
+                    <h4>{{ server.version }}</h4>
+                    <p>{{ server.server_ip }}:{{ server.server_port }}</p>
+                </div>
+                <span class="md-secondary" ng-if="server.server_type == 'test'"
+                      ng-style="{'color':'orange'}">内测服务器</span>
+                <span class="md-secondary" ng-if="server.server_type == 'production'"
+                      ng-style="{'color':'red'}">生产服务器</span>
+                <md-button class="md-secondary" ng-click="getServerInfo(server.server_id)">服务器详情</md-button>
+                <div flex>
                     <md-menu>
-                        <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">{{Business.operations[0].operation_name}}</md-button>
+                        <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
+                            {{server.operationStatus[server.operationStatus.length - 1]}}
+                        </md-button>
                         <md-menu-content>
-                            <md-menu-item ng-repeat="operation in Business.operations | orderBy:'-'">
-                                <span>{{operation.operation_name}}</span>
+                            <md-menu-item ng-repeat="operation in server.operationStatus track by $index">
+                                <span>{{operation}}</span>
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
-                </md-grid-tile-footer>
-            </md-list>
-            <md-divider></md-divider>
-            <md-divider></md-divider>
-        </div>
+                </div>
+                <md-radio-button ng-value="server" aria-label="Custom checkbox"></md-radio-button>
+            </div>
+        </md-list-item>
+        </md-radio-group>
+        <md-divider></md-divider>
+        <md-grid-tile-footer>
+            <md-button class="md-secondary" ng-click="innerTest(Business)">提交内测</md-button>
+            <md-button class="md-secondary" ng-click="online(Business, onlineSelect)">上线</md-button>
+            <md-button class="md-secondary" ng-click="rollBack(Business, onlineSelect)">回滚</md-button>
+            <md-button class="md-secondary" ng-click="serverEnable(Business, onlineSelect)">对外</md-button>
+            <md-button class="md-secondary" ng-click="onlineSuccess(Business)">上线完成</md-button>
+            <md-menu>
+                <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
+                    {{Business.operations[0].operation_name}}
+                </md-button>
+                <md-menu-content>
+                    <md-menu-item ng-repeat="operation in Business.operations | orderBy:'-'">
+                        <span>{{operation.operation_name}}</span>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </md-grid-tile-footer>
+        </md-list>
+        <md-divider></md-divider>
+        <md-divider></md-divider>
+    </div>
 </div>

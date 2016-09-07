@@ -6,7 +6,7 @@ angular
             .icon("menu", "./assets/svg/menu.svg", 24);
         $mdThemingProvider.theme('default')
             .primaryPalette('light-blue')
-            .accentPalette('orange')
+            .accentPalette('blue')
             .warnPalette('red');
         $httpProvider.interceptors.push('authHttpResponseInterceptor');
 
@@ -50,8 +50,8 @@ angular
 
         }
     }])
-    .factory('socket', function () {
-        var socket = io.connect('172.17.106.21:4200');
+    .factory('socket', function (ENV) {
+        var socket = io.connect(ENV.main_server.ip + ":" + ENV.main_server.port);
         socket.on('connect', function () {
             console.log('connect sucess');
         });
@@ -112,20 +112,19 @@ angular
                 if ($sessionStorage.token) {
                     config.headers.token = $sessionStorage.token;
                 }
-                console.log($sessionStorage.token);
-                console.log(config.headers.token);
+                console.log(config);
                 return config;
             }
         };
     }])
-    .service('mainService', ['$http', '$q', function ($http, $q) {
+    .service('mainService', ['$http', '$q', 'ENV', function ($http, $q, ENV) {
 
         function postTokenService(token) {
             var defer = $q.defer();
             var data = {
                 token: token
             };
-            var http = 'http://172.17.106.21:4200/sso/interceptor/';
+            var http = 'http://' + ENV.main_server.ip + ':' + ENV.main_server.port + '/sso/interceptor/';
             $http.post(
                 http,
                 $.param(data)

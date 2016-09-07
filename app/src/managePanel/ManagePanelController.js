@@ -1,9 +1,10 @@
 (function(){
     'use strict';
     angular.module('managePanel')
-        .controller('ManagePanelController', ['$scope', '$mdDialog', 'ManagePanelService', ManagePanelController]);
+        .controller('ManagePanelController', ['$scope', '$mdDialog', 'ManagePanelService', '$state', ManagePanelController])
+        .controller('AssociateBusinessController',['$scope', 'ManagePanelService', '$state','$stateParams','$sessionStorage', AssociateBusinessController]);
 
-    function ManagePanelController($scope, $mdDialog, ManagePanelService){
+    function ManagePanelController($scope, $mdDialog, ManagePanelService, $state){
 
         var id;//业务id
         $scope.loaded = false;
@@ -147,33 +148,36 @@
 
 //业务相关
         $scope.AssociateBusiness = function (business_id) {
-            id = business_id;
-            $scope.items = [];
-            $mdDialog.show({
-                controller: AssociateBusinessController,
-                templateUrl: '/app/src/managePanel/view/AssociateBusiness.html',
-                parent: angular.element(document.getElementById('content')),
-                clickOutsideToClose: true
-            });
+            $state.go('manageAssociate',{b_id:business_id});
         };
 
-//业务相关信息
-        function AssociateBusinessController($scope, $mdDialog) {
-            $scope.hide = function () {
-                $mdDialog.hide();
-            };
-            $scope.cancel = function () {
-                $mdDialog.cancel();
-            };
-            $scope.answer = function (answer) {
-                $mdDialog.hide(answer);
-            };
+        function updateBusinesses() {
+            ManagePanelService
+                .loadAllBusinesses()
+                .then(function(business){
+                    $scope.Businesses = [].concat(business);
+                });
+        }
 
-//服务器信息
+    }
+
+//业务相关信息
+        function AssociateBusinessController($scope, ManagePanelService, $state, $stateParams, $sessionStorage) {
+            var id = $stateParams.b_id || $sessionStorage.b_id;
+            $sessionStorage.b_id = id
+  //服务器信息
+            $scope.openMenu = function($mdOpenMenu, ev) {
+                $mdOpenMenu(ev);
+            };
             updateServers();
             $scope.items = [];
             $scope.is_delete = false;
             $scope.is_add = false;
+
+            $scope.back = function(){
+                $state.go('managePanel');
+            }
+
             $scope.addServer = function(){
                 $scope.is_add = true;
             }
@@ -239,7 +243,6 @@
                         'server_type':types[$scope.type],
                         'business_id':id
                     }
-                    // console.log(JSON.stringify(data))
                     ManagePanelService
                         .postAssociateServer(data)
                         .then(function(result){
@@ -296,7 +299,7 @@
                 $scope.port = "";
             }
 
-//人员信息
+  //人员信息
             emptyPersonVal();
             updatePersons();
 
@@ -311,7 +314,8 @@
                         for(var i=0;i<res.length;i++){
                           $scope.departments.push({
                             id:i,
-                            name:res[i]
+                            name:res[i].departmentName,
+                            d_id:res[i].departmentId
                           });
                         }
                         getDept();
@@ -353,7 +357,7 @@
             };
             $scope.selectDept = getDept;
             function getDept(){
-                var dept = $scope.departments[$scope.selectedDept].name;
+                var dept = $scope.departments[$scope.selectedDept].d_id;
                 $scope.personsInDept = [];
                 $scope.selectedPersonDept = "";
                 $scope.loaded4 = false;
@@ -370,19 +374,23 @@
                           if(names.indexOf(u_name)<0){
                             $scope.personsInDept.push({
                                 id:index++,
-                                name:u_name
+                                name:u_name,
+                                u_id:res[i]['userId']
                               });
                           }
                         }
                         $scope.loaded4 = true;
                     });
             }
+            var id_for_name = {};
             $scope.selectPersonDept = function(){
                 var name = $scope.personsInDept[$scope.selectedPersonDept].name;
+                var user_id = $scope.personsInDept[$scope.selectedPersonDept].u_id;
                 var dept = $scope.departments[$scope.selectedDept].name;
-                var selected = name+'['+dept+']';
+                var selected = name + '[' + dept + ']';
                 if($scope.selected_persons.indexOf(selected)<=-1){
                     $scope.selected_persons.push(selected);
+                    id_for_name[name] = user_id;
                 }
             }
             $scope.subPersons = function(){
@@ -391,13 +399,13 @@
                     var select = [];
                     var persons = $scope.selected_persons;
                     for(var i in persons){
-                        var index = persons[i];
-                        select.push(index.slice(0,index.indexOf('[')));
+                        var name = persons[i].slice(0,persons[i].indexOf('['))
+                        select.push(id_for_name[name]);
                     }
                     if(select.length>0){
                         var data = {
                             businessId:id,
-                            userNames:JSON.stringify(select)
+                            userIds:JSON.stringify(select)
                         }
                         ManagePanelService
                             .postAssociatePersons(data)
@@ -429,15 +437,7 @@
                           ManagePanelService
                             .deleteAssociatePersons(data)
                             .then(function(res){
-                                if(typeof res == 'string')
-                                    alert(res);
-                                else{
-                                  var msg = '错误信息\n';
-                                  for(var i in res){
-                                    msg += res[i].username + ':' + res[i].message + '\n';
-                                  }
-                                  alert(msg);
-                                }
+                                alert(res);
                                 emptyPersonVal();
                                 updatePersons();
                             });
@@ -466,7 +466,7 @@
                 $scope.personsInDept = [];
                 $scope.selectedDept = 0;
             }
-//负载均衡信息
+  //负载均衡信息
             updatePool();
             $scope.addLB = function(){
                 $scope.add_pool = true;
@@ -524,14 +524,4 @@
             }
         }
 
-
-        function updateBusinesses() {
-            ManagePanelService
-                .loadAllBusinesses()
-                .then(function(business){
-                    $scope.Businesses = [].concat(business);
-                });
-        }
-
-    }
 })();

@@ -11,10 +11,10 @@
                 </md-card-title-text>
 
             </md-card-title>
-            <md-card-actions layout="row" layout-align="start center" >
+            <!--<md-card-actions layout="row" layout-align="start center" >
                 <md-button ng-click="innerTestSuccess(businessInfo.business_id)">内测成功</md-button>
                 <md-button ng-click="innerTestFailure(businessInfo.business_id)">内测失败</md-button>
-            </md-card-actions>
+            </md-card-actions>-->
         </div>
         <md-card-content style="overflow: scroll;" flex layout="column" md-colors="{'background': 'light-blue-100'}" >
             <span ng-repeat="operation in serverInfo.operationStatus track by $index">{{operation}}</span>

@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('person')
-        .service('personService', ['$q', '$http','ENV', personService]);
+        .service('personService', ['$q', '$http','ENV','AppService', personService]);
 
     /**
      * Users DataService
@@ -13,25 +13,18 @@
      * @constructor
      */
 
-    function personService($q, $http, ENV) {
+    function personService($q, $http, ENV, AppService) {
         var ad_config = {
           ip: ENV.main_server.ip,
           port: ENV.main_server.port
         }
 
-        function queryAllPerson() {
-            var defer = $q.defer();
-            $http.get(
-                'http://' + ad_config.ip + ':' + ad_config.port + '/user'
-            ).then(function (result) {
-                    defer.$$resolve(result['data']['message']);
-                }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-            return defer.promise;
+        this.queryAllPerson = function(){
+            var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/user';
+            return AppService.get(url);
         }
 
-        function queryBussinessByUser(userId){
+        this.queryBussinessByUser = function(userId){
             var defer = $q.defer();
             $http.get(
                 'http://' + ad_config.ip + ':' + ad_config.port + '/user/business/' + userId
@@ -43,16 +36,5 @@
             return defer.promise;
         }
 
-        // Promise-based API
-        return {
-            queryAllPerson: function () {
-                // Simulate async nature of real remote calls
-                return queryAllPerson();
-            },
-            queryBussinessByUser: function (userId) {
-                // Simulate async nature of real remote calls
-                return queryBussinessByUser(userId);
-            }
-        };
     }
 })();

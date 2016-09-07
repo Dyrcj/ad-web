@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('onlinePanel')
-        .service('onlinePanelService', ['$q', '$http', OnlinePanelService]);
+        .service('onlinePanelService', ['$q', '$http','ENV','AppService', OnlinePanelService]);
 
     /**
      * Users DataService
@@ -13,86 +13,15 @@
      * @constructor
      */
 
-    function OnlinePanelService($q, $http) {
-
-        function getBusiness(userID) {
-            var defer = $q.defer();
-            $http.get(
-                'http://172.17.106.21:4200/business/user/businesses'
-            ).then(function (result) {
-                defer.$$resolve(result['data']['message']);
-            }).catch(function (err) {
-                defer.$$reject(err);
-            });
-            return defer.promise;
+    function OnlinePanelService($q, $http, ENV, AppService) {
+        var ad_config = {
+          ip: ENV.main_server.ip,
+          port: ENV.main_server.port
         }
 
-        function openServer(serverId) {
+        this.innerTest = function(data){
+            var url = 'http://'+ ad_config.ip  + ':' + ad_config.port + '/online/innerTest';
             var defer = $q.defer();
-            $http.get(
-                'http://172.17.106.21:4200/server/startServer/' + serverId
-            ).then(function (result) {
-                if(result['data']['success']) {
-                    defer.$$resolve(result['data']['message']);
-                } else {
-
-                }
-            }).catch(function (err) {
-                defer.$$reject(err);
-            });
-            return defer.promise;
-        }
-
-        function closeServer(serverId) {
-            var defer = $q.defer();
-            $http.get(
-                'http://172.17.106.21:4200/server/stopServer/' + serverId
-            ).then(function (result) {
-                console.log(result['data']);
-                if(result['data']['success']) {
-                    defer.$$resolve(result['data']['message']);
-                } else {
-
-                }
-            }).catch(function (err) {
-                defer.$$reject(err);
-            });
-            return defer.promise;
-        }
-
-        function postBusiness(data) {
-            var defer = $q.defer();
-            $http.post(
-                'http://172.17.106.21:4200/business/add',
-                $.param(data)
-            ).then(function (result) {
-                console.log(JSON.stringify(result));
-                defer.$$resolve(result['data']['message']);
-            }).catch(function (err) {
-                defer.$$reject(err);
-            });
-            return defer.promise;
-        }
-
-        function getServerInfo(serverID) {
-            var defer = $q.defer();
-            var url = 'http://172.17.106.21:4200/server/' + serverID;
-            $http.get(url)
-                .then(function (result) {
-                    if(result['data']['success']) {
-                        defer.$$resolve(result['data']['message']);
-                    } else {
-
-                    }
-                }).catch(function (err) {
-                defer.$$reject(err);
-            });
-            return defer.promise;
-        }
-
-        function postInnerTest(data) {
-            var defer = $q.defer();
-            var url = 'http://172.17.106.21:4200/online/innerTest';
             $http.post(url,$.param(data))
                 .then(function (result) {
                     if(result['data']['success']) {
@@ -109,9 +38,106 @@
             return defer.promise;
         }
 
-        function postTestStatus(data) {
+        this.closeRemoteServer = function(serverId){
+            var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/stopServer/' + serverId;
             var defer = $q.defer();
-            var url = 'http://172.17.106.21:4200/online/testStatus';
+            $http.get(
+                url
+            ).then(function (result) {
+                console.log(result['data']);
+                if(result['data']['success']) {
+                    defer.$$resolve(result['data']['message']);
+                } else {
+
+                }
+            }).catch(function (err) {
+                defer.$$reject(err);
+            });
+            return defer.promise;
+        }
+
+        this.openRemoteServer = function(serverId){
+            var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/startServer/' + serverId;
+            $http.get(
+                url
+            ).then(function (result) {
+                if(result['data']['success']) {
+                    defer.$$resolve(result['data']['message']);
+                } else {
+
+                }
+            }).catch(function (err) {
+                defer.$$reject(err);
+            });
+            return defer.promise;
+        }
+
+        this.loadAllBusinesses = function(){
+            var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/business/user/businesses';
+            return AppService.get(url);
+        }
+
+        this.getRemoteServerInfo = function(serverID){
+            var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/' + serverID;
+            var defer = $q.defer();
+            $http.get(url)
+                .then(function (result) {
+                    if(result['data']['success']) {
+                        defer.$$resolve(result['data']['message']);
+                    } else {
+
+                    }
+                }).catch(function (err) {
+                defer.$$reject(err);
+            });
+            return defer.promise;
+        }
+
+        this.testStatus = function(data){
+          var defer = $q.defer();
+          var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/testStatus';
+          $http.post(url,$.param(data))
+              .then(function (result) {
+                  console.log(result);
+                  if(result['data']['success']) {
+                      defer.$$resolve(result['data']['message']);
+                  } else {
+                      console.log(result['data']['message']);
+                      defer.$$reject(result['data']['message']);
+                  }
+                  console.log(JSON.stringify(result));
+
+              }).catch(function (err) {
+              defer.$$reject(err);
+          });
+          return defer.promise;
+        }
+
+        this.online = function(data){
+           var defer = $q.defer();
+           var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/syncServers';
+           console.log(JSON.stringify(data));
+           $http.post(url,$.param(data))
+               .then(function (result) {
+                   console.log(result);
+                   if(result['data']['success']) {
+                       defer.$$resolve(result['data']['message']);
+                   } else {
+                       console.log(result['data']['message']);
+                       defer.$$reject(result['data']['message']);
+                   }
+                   console.log(JSON.stringify(result));
+
+               }).catch(function (err) {
+               defer.$$reject(err);
+           });
+           return defer.promise;
+        }
+
+        this.onlineSuccess = function(data){
+            var defer = $q.defer();
+            var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/syncFinish';
+            console.log(JSON.stringify(data));
             $http.post(url,$.param(data))
                 .then(function (result) {
                     console.log(result);
@@ -129,31 +155,27 @@
             return defer.promise;
         }
 
-        // Promise-based API
-        return {
-            innerTest: function (data) {
-                return postInnerTest(data);
-            },
-            closeRemoteServer: function (serverId) {
-                return closeServer(serverId);
-            },
-            openRemoteServer: function (serverId) {
-                return openServer(serverId);
-            },
-            loadAllBusinesses: function () {
-                // Simulate async nature of real remote calls
-                return getBusiness();
-            },
-            getRemoteServerInfo: function (serverID) {
-                return getServerInfo(serverID);
-            },
-            createBusiness: function (data) {
-                return postBusiness(data);
-            },
-            testStatus: function (data) {
-                return postTestStatus(data);
-            }
-        };
+        this.rollBack = function(data){
+            var defer = $q.defer();
+            var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/rollback';
+            console.log(JSON.stringify(data));
+            $http.post(url,$.param(data))
+                .then(function (result) {
+                    console.log(result);
+                    if(result['data']['success']) {
+                        defer.$$resolve(result['data']['message']);
+                    } else {
+                        console.log(result['data']['message']);
+                        defer.$$reject(result['data']['message']);
+                    }
+                    console.log(JSON.stringify(result));
+
+                }).catch(function (err) {
+                defer.$$reject(err);
+            });
+            return defer.promise;
+        }
+
     }
 
 })();

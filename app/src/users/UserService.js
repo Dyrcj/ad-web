@@ -2,7 +2,7 @@
     'use strict';
 
     angular.module('users')
-        .service('userService', ['$q', '$http', 'ENV', UserService]);
+        .service('userService', ['$q', '$http', 'ENV', 'AppService', UserService]);
 
     /**
      * Users DataService
@@ -12,13 +12,13 @@
      * @returns {{loadAll: Function}}
      * @constructor
      */
-    function UserService($q, $http, ENV){
+    function UserService($q, $http, ENV, AppService){
         var ad_config = {
             ip: ENV.main_server.ip,
             port: ENV.main_server.port
         }
 
-        function postLogin(data) {
+        this.userLogin = function(data) {
             var defer = $q.defer();
             $http.post(
                 'http://' + ad_config.ip + ':' + ad_config.port + '/user/signin',
@@ -35,13 +35,6 @@
             });
             return defer.promise;
         }
-
-        // Promise-based API
-        return {
-            userLogin: function (data) {
-                return postLogin(data);
-            }
-        };
     }
 
 })();

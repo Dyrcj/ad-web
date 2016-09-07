@@ -1,24 +1,28 @@
-<md-button ng-click="createBusiness()" class="md-raised" style="background:lightslategray;color:white;box-shadow:3px 2px 4px #333333">
+<md-input-container class="md-block" flex>
+    <label>搜索框</label>
+    <input ng-model="input">
+</md-input-container>
+<md-button ng-click="createBusiness()" class="md-raised" style="background:rgb(68, 168, 218);color:white">
     新建业务
 </md-button>
 <div layout="column" ng-cloak>
-    <md-content flex layout-padding style="text-align:center">
-        <div layout="row" style="font-size:20px;background:grey;box-shadow:4px 2px 6px #333333;color:white;border-radius:5px 5px 0 0">
-            <div flex>业务名</div>
-            <div flex>版本号</div>
-            <div flex>git名称</div>
-            <div flex>上线次数</div>
-            <div flex>最近一次上线</div>
-            <div flex>操作</div>
+    <div flex layout-padding style="text-align:center">
+        <div layout="row" class="table-row" style="background:rgb(68, 168, 218);color:#ffffff;box-shadow:1px 1px 1px #888888;font-weight:bold;font-size:20px;border-radius:5px 5px 0 0">
+            <div flex="40">业务名</div>
+            <div flex="40">版本号</div>
+            <div flex="40">git名称</div>
+            <div flex="20">上线次数</div>
+            <div flex="40">最近一次上线</div>
+            <div flex="20">操作</div>
         </div>
         <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-        <div layout="row" style="background:white;font-size:15px;box-shadow:4px 2px 6px #333333;" ng-repeat="business in Businesses">
-            <div flex><span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="AssociateBusiness(business.business_id)">{{business.name}}</span></div>
-            <div flex>{{business.current_version}}</div>
-            <div flex>{{business.git_name}}</div>
-            <div flex>{{business.online_times}}</div>
-            <div flex>{{business.last_online_time}}</div>
-            <div flex>
+        <div layout="row" class="table-row" style="box-shadow:1px 1px 1px #888888;background:#ffffff;font-size:15px;border-top:1px solid rgb(213, 226, 232)" ng-repeat="business in Businesses | filter:input">
+            <div flex="40"><span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="AssociateBusiness(business.business_id)">{{business.name}}</span></div>
+            <div flex="40">{{business.current_version}}</div>
+            <div flex="40">{{business.git_name}}</div>
+            <div flex="20">{{business.online_times}}</div>
+            <div flex="40">{{business.last_online_time}}</div>
+            <div flex="20">
                 <span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="modifyBusiness(business.business_id)">
                     修改
                 </span>/
@@ -27,5 +31,5 @@
                 </span>
             </div>
         </div>
-    </md-content>
+    </div>
 </div>

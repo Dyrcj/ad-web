@@ -49,9 +49,153 @@
                 );
             }
 
-            /*$scope.openMenu = function($mdOpenMenu, ev) {
-                $mdOpenMenu(ev);
-            };*/
+            $scope.onlineSuccess = function (Business) {
+                var data = {
+                    business_id: Business.business_id
+                };
+                onlinePanelService.onlineSuccess(data)
+                    .then(function (result) {
+                        alert(result);
+                    })
+                    .catch(function (err) {
+                        alert(err);
+                    });
+            }
+
+            $scope.onlineSelect = $scope.lastOnlineSelect;
+
+            $scope.lastOnlineSelect = $scope.onlineSelect;
+
+            $scope.serverEnable = function (Business, onlineSelect) {
+
+            };
+
+            $scope.rollBack = function (Business, onlineSelect) {
+                $mdBottomSheet.show({
+                    controllerAs: 'ctrl',
+                    templateUrl: '/app/src/onlinePanel/view/RollBack.html',
+                    controller: tryRollBack,
+                    parent: angular.element(document.getElementById('content')),
+                    locals: {Business : Business, OnlineSelect: onlineSelect}
+                });
+            };
+
+            function tryRollBack($scope, $sessionStorage, $location, subpub, Business, OnlineSelect) {
+                $scope.loaded = true;
+                $scope.businessInfo = Business;
+                $scope.serverInfo = OnlineSelect;
+
+                if(typeof OnlineSelect == 'undefined' || OnlineSelect == null) {
+                    alert('请选择一个服务器回滚');
+                    return;
+                }
+
+                var data = {
+                    business_id: Business.business_id,
+                    servers: "[\"" + OnlineSelect.server_ip + "\"]"
+                };
+
+                subpub.subscribe({
+                    collectionName: 'online',
+                    userId: $sessionStorage.userInfo.user_id,
+                    modelId: OnlineSelect.server_id
+                }, function (result) {
+                    if(result['success']) {
+                        $scope.serverInfo.status = result.message.status;
+                        $scope.serverInfo.log = result.message.log;
+                        $scope.serverInfo.version = result.message.version;
+                        $scope.serverInfo.operationStatus = result.message.operationStatus;
+                        if($scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器回滚成功' ||
+                            $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器回滚失败') {
+                            if(!$scope.loaded) {
+                                alert('服务器'+ $scope.serverInfo.server_name + '回滚结束');
+                            }
+                            $scope.loaded = true;
+                        }
+                        $scope.$apply();
+                    } else {
+                        showToast(result.message);
+                    }
+                    console.log(JSON.stringify(result));
+
+                });
+
+                if(typeof Business.operations[0] == 'undefined' || Business.operations[0].operation_name == '添加tag成功' || Business.operations[0].operation_name == '上线中...'
+                    || Business.operations[0].operation_name.indexOf('服务器上线成功')) {
+                    $scope.loaded = false;
+                    onlinePanelService.rollBack(data)
+                        .then(function (results) {
+                            console.log(JSON.stringify(results));
+                            showToast(JSON.stringify(results));
+                        }).catch(function (err) {
+                        showToast(JSON.stringify(err));
+                    });
+                }
+            }
+
+
+            $scope.online = function (Business, onlineSelect) {
+                $mdBottomSheet.show({
+                    controllerAs: 'ctrl',
+                    templateUrl: '/app/src/onlinePanel/view/Online.html',
+                    controller: tryOnline,
+                    parent: angular.element(document.getElementById('content')),
+                    locals: {Business : Business, OnlineSelect: onlineSelect}
+                });
+            };
+
+            function tryOnline($scope, $sessionStorage, $location, subpub, Business, OnlineSelect) {
+                $scope.loaded = true;
+                $scope.businessInfo = Business;
+                $scope.serverInfo = OnlineSelect;
+
+                if(typeof OnlineSelect == 'undefined' || OnlineSelect == null) {
+                    alert('请选择一个服务器上线');
+                    return;
+                }
+
+                var data = {
+                    business_id: Business.business_id,
+                    servers: "[\"" + OnlineSelect.server_ip + "\"]"
+                };
+
+                subpub.subscribe({
+                    collectionName: 'online',
+                    userId: $sessionStorage.userInfo.user_id,
+                    modelId: OnlineSelect.server_id
+                }, function (result) {
+                    if(result['success']) {
+                        $scope.serverInfo.status = result.message.status;
+                        $scope.serverInfo.log = result.message.log;
+                        $scope.serverInfo.version = result.message.version;
+                        $scope.serverInfo.operationStatus = result.message.operationStatus;
+                        if($scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线成功' ||
+                            $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线失败') {
+                            if(!$scope.loaded) {
+                                alert('服务器'+ $scope.serverInfo.server_name + '上线结束');
+                            }
+                            $scope.loaded = true;
+                        }
+                        $scope.$apply();
+                    } else {
+                        showToast(result.message);
+                    }
+                    console.log(JSON.stringify(result));
+
+                });
+
+                if(Business.operations[0].operation_name == '添加tag成功' || Business.operations[0].operation_name == '上线中...'
+                || Business.operations[0].operation_name.indexOf('服务器上线成功')) {
+                    $scope.loaded = false;
+                    onlinePanelService.online(data)
+                        .then(function (results) {
+                            console.log(JSON.stringify(results));
+                            showToast(JSON.stringify(results));
+                        }).catch(function (err) {
+                        showToast(JSON.stringify(err));
+                    });
+                }
+            }
 
             $scope.innerTest = function (Business) {
                 $mdBottomSheet.show({
@@ -62,10 +206,12 @@
                     locals: {Business : Business}
                 });
             };
+
+
             
-            function tryInnerTest($scope, $sessionStorage, subpub, Business) {
-                $scope.loaded = false;
+            function tryInnerTest($scope, $sessionStorage, $location, subpub, Business) {
                 console.log(JSON.stringify(Business));
+                $scope.loaded = true;
                 $scope.businessInfo = Business;
                 $scope.serverInfo = Business.servers[0];
                 var data = {
@@ -82,8 +228,11 @@
                         $scope.serverInfo.log = result.message.log;
                         $scope.serverInfo.version = result.message.version;
                         $scope.serverInfo.operationStatus = result.message.operationStatus;
-                        if($scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '提交内测成功' ||
-                            $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '提交内测失败') {
+                        if($scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线成功' ||
+                            $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线失败') {
+                            if(!$scope.loaded) {
+                                alert('提交内测结束');
+                            }
                             $scope.loaded = true;
                         }
                         $scope.$apply();
@@ -94,9 +243,14 @@
 
                 });
 
-                if(Business.operations[0].operation_name == '服务器上线失败' ||
+                if($scope.serverInfo.operationStatus.length == 0) {
+                    $scope.loaded = false;
+                }
+
+                if(typeof Business.operations[0] == 'undefined' || Business.operations[0].operation_name == '提交内测失败' ||
                     Business.operations[0].operation_name == '内测不通过' ) {
                     // alert(Business.operations[0].operation_name)
+                    $scope.loaded = false;
                     onlinePanelService.innerTest(data)
                         .then(function (results) {
                             console.log(JSON.stringify(results));
@@ -118,6 +272,7 @@
                         })
                         .catch(function (err) {
                             alert(JSON.stringify(err));
+                            $location.path('/#/onlinePanel');
                         });
                 };
 
@@ -178,7 +333,7 @@
                         });
                 };
 
-                subpub.subscribe({
+                /*subpub.subscribe({
                     collectionName: 'serverinfo',
                     userId: $sessionStorage.userInfo.user_id,
                     modelId: serverInfo.server_id
@@ -193,9 +348,10 @@
                         showToast(result.message);
                     }
                     console.log(JSON.stringify(result));
-                });
+                });*/
                 /*this.serverID = thisServerID;*/
-            };
+            }
+
         });
 
 })();
