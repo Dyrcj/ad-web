@@ -125,12 +125,11 @@
             <div flex>所属部门</div>
         </div>
         <md-progress-circular style="margin:40px auto" ng-show="!loaded3" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-        <span>{{PersonsInfo}}</span>
         <div layout="row" style="margin:0px auto;width:450px;padding:3px;font-size:18px;border-top:1px solid rgb(213, 226, 232);box-shadow:1px 1px 1px #888888" ng-repeat="person in PersonsInfo track by $index">
             <div ng-show="delete_per">
                 <md-checkbox ng-checked="exists2(person.name,selectedPerson)" ng-click="toggle2(person.name,selectedPerson)" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
             </div>
-            <div flex>{{person.name}}</div>
+            <div flex>{{person.user_name}}</div>
             <div flex>{{person.department}}</div>
         </div>
 

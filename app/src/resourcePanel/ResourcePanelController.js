@@ -9,7 +9,7 @@
         $scope.openMenu = function($mdOpenMenu, ev) {
             $mdOpenMenu(ev);
         };
-
+        var id;
 //添加LB
        var types = ['lb_f5','lb_ad'];
        $scope.addLB = function(ev){

@@ -34,7 +34,7 @@ angular
             } else {
                 token = tokenLocation.substring(tokenLocation.indexOf('=') + 1, tokenLocation.length);
             }
-            console.log('token:' + token);
+            alert('token:' + token);
             mainService.postToken(token)
                 .then(function (result) {
                     alert(result);
@@ -44,7 +44,7 @@ angular
                     $state.go('onlinePanel');
                 })
                 .catch(function (err) {
-                    alert(err);
+                    alert("err" + err);
                 });
 
 

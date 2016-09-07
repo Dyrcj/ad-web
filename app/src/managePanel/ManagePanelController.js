@@ -450,11 +450,13 @@
                 ManagePanelService
                     .getAssociatePersons(id)
                     .then(function(res){
-                        $scope.PersonsInfo = res;
-                        for(var i in res){
-                          $scope.Persons.push(res[i]['name']);
+                        if(typeof res != 'string') {
+                            $scope.PersonsInfo = res;
+                            for(var i in res){
+                                $scope.Persons.push(res[i]['user_name']);
+                            }
+                            $scope.loaded3 = true;
                         }
-                        $scope.loaded3 = true;
                     });
             }
             function emptyPersonVal(){
