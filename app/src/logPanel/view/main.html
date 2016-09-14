@@ -1,0 +1,75 @@
+<div layout="column" ng-cloak>
+  <md-content class="md-padding">
+    <md-progress-circular style="margin:40px auto" ng-show="false" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+    <form ng-submit="$event.preventDefault()" name="searchForm">
+
+      <div layout="row">
+        <md-autocomplete flex
+            md-input-name="autocompleteField"
+            md-selected-item="selectedBusiness"
+            md-search-text="searchBusiness"
+            md-items="item in querySearch(searchBusiness, BusinessStates)"
+            md-item-text="item.display"
+            md-require-match
+            md-floating-label="业务名称">
+          <md-item-template>
+            <span md-highlight-text="searchText">{{item.display}}</span>
+          </md-item-template>
+          <div ng-messages="searchForm.autocompleteField.$error" ng-if="searchForm.autocompleteField.$touched">
+            <div ng-message="md-require-match">业务名不存在</div>
+          </div>
+        </md-autocomplete>
+        <md-autocomplete flex
+            md-input-name="autocompleteField2"
+            md-selected-item="selectedPerson"
+            md-search-text="searchPerson"
+            md-items="item in querySearch(searchPerson, PersonStates)"
+            md-item-text="item.display"
+            md-require-match
+            md-floating-label="操作人员">
+          <md-item-template>
+            <span md-highlight-text="searchText">{{item.display}}</span>
+          </md-item-template>
+          <div ng-messages="searchForm.autocompleteField2.$error" ng-if="searchForm.autocompleteField2.$touched">
+            <div ng-message="md-require-match">姓名不存在</div>
+          </div>
+        </md-autocomplete>
+        <span flex></span>
+      </div>
+
+      <div layout="row">
+        <div flex style="padding-top:20px">
+            <label><strong>起始时间</strong></label>
+            <md-datepicker ng-model="startTime" md-open-on-focus></md-datepicker>
+        </div>
+        <div flex style="padding-top:20px">
+        <label><strong>截止时间</strong></label>
+            <md-datepicker ng-model="endTime" md-min-date="startTime" md-open-on-focus></md-datepicker>
+        </div>
+        <div flex style="text-align:center">
+          <md-button class="md-fab" title="搜索">
+              <ng-md-icon icon="search" style="fill:#ffffff;font-size:45px" size="35"></md-icon>
+          </md-button>
+        </div>
+
+      </div>
+
+      <!-- {{startTime.toLocaleDateString().split('/').join('-')}} -->
+    </form>
+  </md-content>
+
+  <div flex layout-padding style="text-align:center;width:60%;margin:20px auto">
+      <div layout="row" class="table-row" style="background:rgb(68, 168, 218);color:#ffffff;box-shadow:1px 1px 1px #888888;font-weight:bold;font-size:20px;border-radius:5px 5px 0 0">
+          <div flex>时间</div>
+          <div flex>详情</div>
+      </div>
+      <md-progress-circular style="margin:40px auto" ng-show="false" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+      <div layout="row" class="table-row" style="box-shadow:1px 1px 1px #888888;background:#ffffff;font-size:15px;border-top:1px solid rgb(213, 226, 232)">
+          <div flex>2016-09-12</div>
+          <div flex>
+              <ng-md-icon icon="description" size="18" ng-click="openDetails()"></ng-md-icon>
+          </div>
+      </div>
+  </div>
+
+</div>

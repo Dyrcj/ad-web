@@ -120,7 +120,49 @@
         </md-card-title>
         <md-card-content>
             <md-radio-group ng-model="onlineSelect">
-                <div ng-repeat="server in Business.servers | orderBy: '-server_type'" layout="column">
+                <md-list-item class="md-3-line" ng-repeat="server in Business.servers | orderBy: '-server_type'"
+                              ng-click="null">
+                    <div layout="row" layout-align="end center" class="md-list-item-text">
+                        <div layout="column" flex>
+                            <h3>{{ server.server_name }}</h3>
+                            <h4>{{ server.version }}</h4>
+                            <p>{{ server.server_ip }}:{{ server.server_port }}</p>
+                        </div>
+
+                        <div>
+                            <md-menu>
+                                <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
+                                    {{server.operationStatus[server.operationStatus.length - 1]}}
+                                </md-button>
+                                <md-menu-content>
+                                    <md-menu-item ng-repeat="operation in server.operationStatus track by $index">
+                                        <span>{{operation}}</span>
+                                    </md-menu-item>
+                                </md-menu-content>
+                            </md-menu>
+                        </div>
+                        <div>
+                            <ng-md-icon tooltips tooltip-template='运行中' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'running' " icon="play_circle_outline" size="40" style="font-size: 100px;"></ng-md-icon>
+                            <ng-md-icon tooltips tooltip-template='停止' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'stop' " icon="pause_circle_outline" size="40" style="font-size: 100px;"></ng-md-icon>
+                            <ng-md-icon tooltips tooltip-template='状态未知' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'unknown' " icon="" size="40" style="font-size: 100px;"></ng-md-icon>
+                        </div>
+                        <div tooltips tooltip-template="{{server.lbStatus == 'STATE_ENABLED' ? '对外' : '对内'}}" tooltip-side="left" tooltip-smart="true">
+                            <ng-md-icon icon="{{server.lbStatus == 'STATE_ENABLED' ? 'sentiment_satisfied' : 'sentiment_very_dissatisfied'}}" ng-init="color = (server.lbStatus == 'STATE_ENABLED' ? 'green' : 'red')" size="40" style="font-size: 100px;fill:'{{color}}'"></ng-md-icon>
+                        </div>
+                        <span class="md-secondary" ng-if="server.server_type == 'test'"
+                              ng-style="{'color':'orange'}">内测服务器</span>
+                        <span class="md-secondary" ng-if="server.server_type == 'production'"
+                              ng-style="{'color':'red'}">生产服务器</span>
+                        <md-button class="md-primary" ng-click="getServerInfo(server.server_id)">
+                            <md-tooltip md-direction="Bottom">
+                                服务器详情
+                            </md-tooltip>
+                            <ng-md-icon icon="developer_dashboard" size="40" style="font-size: 100px;fill:light-blue"></ng-md-icon>
+                        </md-button>
+                        <md-radio-button ng-value="server" aria-label="Custom checkbox" style="font-size: 10px"></md-radio-button>
+                    </div>
+                </md-list-item>
+                <!--<div ng-repeat="server in Business.servers | orderBy: '-server_type'" layout="column">
                     <div layout="row">
                         <span ng-style="{'color':'blue'}">{{ server.server_name }}</span><md-divider></md-divider><span ng-style="{'color':'orange'}">{{ server.server_ip }}:{{ server.server_port }}</span><md-divider></md-divider>{{ server.version }}
                     </div>
@@ -170,7 +212,7 @@
                               ng-style="{'color':'red'}">生产服务器</span>
                         <md-radio-button class="md-main-span2" aria-label="Custom checkbox" ng-value="server"></md-radio-button>
                     </div>
-                </div>
+                </div>-->
             </md-radio-group>
         </md-card-content>
         <md-divider></md-divider>
