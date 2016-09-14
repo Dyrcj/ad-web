@@ -13,13 +13,14 @@
     "angular-jwt": "0.0.9",
     "angular-material": "git+https://github.com/angular/bower-material.git#master",
     "angular-material-icons": "^0.7.1",
-    "angular-messages": "^1.5.5",
+    "angular-messages": "^1.5.8",
     "angular-socket-io": "^0.7.0",
     "angular-ui-router": "^0.3.1",
     "grunt": "^1.0.1",
     "grunt-ng-constant": "^2.0.1",
     "jquery": "^3.1.0",
     "ngstorage": "^0.3.11",
+    "requirejs": "^2.3.1",
     "socket.io": "^1.4.8"
   },
   "devDependencies": {

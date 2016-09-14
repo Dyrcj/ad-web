@@ -1,14 +1,18 @@
-(function () {
-    'use strict';
+define(['./ssoController'],
+    function(ctrl){
+        function init(app){
+            app.config(function ($stateProvider) {
+                $stateProvider
+                    .state('sso', {
+                        url: "/sso",
+                        templateUrl: '/app/src/sso/view/sso.html',
+                        controller: 'ssoController'
+                    });
 
-    angular.module('sso', ['ngMaterial', 'ui.router'])
-        .config(function ($stateProvider) {
-            $stateProvider
-                .state('sso', {
-                    url: "/sso",
-                    templateUrl: '/app/src/sso/view/sso.html',
-                    controller: 'ssoController'
-                });
-
-        });
-})();
+            })
+            .controller('ssoController', ['$scope', '$location', '$http', ctrl.ssoController]);
+       }
+      return {
+          init: init
+      }
+});

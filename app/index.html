@@ -23,7 +23,7 @@
 
 </head>
 
-<body ng-app="starterApp" layout="column" ng-controller="baseController as bl" ng-cloak>
+<body layout="column" ng-controller="baseController as bl" ng-cloak>
 
 <md-toolbar layout="row">
     <md-button class="menu" hide-gt-sm aria-label="Show User List">
@@ -34,28 +34,49 @@
     <md-button  ng-click="logout()">退出登录</md-button>
 </md-toolbar>
 <md-content layout="row" flex>
-    <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15">
-        <md-list flex>
-            <md-list-item>
-                <md-button ui-sref="onlinePanel">上线面板</md-button>
+    <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15" style="box-shadow:1px 1px 3px #888888">
+        <md-list flex >
+            <md-list-item >
+                <md-button ui-sref="onlinePanel" style="margin:0;width:100%;padding-left:36px">
+                <ng-md-icon icon="present_to_all" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  上线面板
+                </md-button>
             </md-list-item>
             <md-list-item>
-                <md-button  ui-sref="managePanel">业务中心</md-button>
+                <md-button  ui-sref="managePanel" style="margin:0;width:100%;padding-left:36px">
+                  <ng-md-icon icon="business_center" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  业务中心
+                </md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="resourcePanel">资源中心</md-button>
+                <md-button ui-sref="resourcePanel" style="margin:0;width:100%;padding-left:36px">
+                  <ng-md-icon icon="device_hub" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  资源中心
+                </md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="state5">系统配置</md-button>
+                <md-button ui-sref="state5" style="margin:0;width:100%;padding-left:36px">
+                  <ng-md-icon icon="settings" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  系统配置
+                </md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="person">用户管理</md-button>
+                <md-button ui-sref="person" style="margin:0;width:100%;padding-left:36px">
+                  <ng-md-icon icon="person" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  用户管理
+                </md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="state7">统计报表</md-button>
+                <md-button ui-sref="state7" style="margin:0;width:100%;padding-left:36px">
+                  <ng-md-icon icon="trending_up" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  统计报表
+                </md-button>
             </md-list-item>
             <md-list-item>
-                <md-button ui-sref="state8">操作日志</md-button>
+                <md-button ui-sref="logPanel" style="margin:0;width:100%;padding-left:36px">
+                  <ng-md-icon icon="insert_drive_file" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  操作日志
+                </md-button>
             </md-list-item>
         </md-list>
     </md-sidenav>
@@ -67,50 +88,6 @@
         </md-content>
     </md-content>
 </md-content>
-
-<!--</div>-->
-
-
-<script src="../node_modules/angular/angular.js"></script>
-<script src="../node_modules/angular-animate/angular-animate.js"></script>
-<script src="../node_modules/angular-aria/angular-aria.js"></script>
-<script src="../node_modules/angular-ui-router/release/angular-ui-router.js"></script>
-<script src="../node_modules/angular-material-icons/angular-material-icons.js"></script>
-<script src="../node_modules/socket.io-client/socket.io.js"></script>
-<script src="../node_modules/angular-socket-io/socket.js"></script>
-<script src="../node_modules/ngstorage/ngStorage.js"></script>
-<script src="../node_modules/jquery/dist/jquery.js"></script>
-<script src="../node_modules/angular-jwt/dist/angular-jwt.js"></script>
-<script type="text/javascript" src="../node_modules/angular-material/angular-material.js"></script>
-
-<!-- <script src="./config.js"></script> -->
-<script src="../config.js"></script>
-
-<script src="./src/managePanel/ManagePanel.js"></script>
-<script src="./src/managePanel/ManagePanelController.js"></script>
-<script src="./src/managePanel/ManagePanelService.js"></script>
-
-<script src="./src/users/Users.js"></script>
-<script src="./src/users/UserController.js"></script>
-<script src="./src/users/UserService.js"></script>
-
-<script src="./src/persons/person.js"></script>
-<script src="./src/persons/personController.js"></script>
-<script src="./src/persons/personService.js"></script>
-
-<script src="./src/onlinePanel/OnlinePanel.js"></script>
-<script src="./src/onlinePanel/OnlinePanelController.js"></script>
-<script src="./src/onlinePanel/OnlinePanelService.js"></script>
-
-<script src="./src/sso/sso.js"></script>
-<script src="./src/sso/ssoController.js"></script>
-
-<script src="./src/resourcePanel/ResourcePanel.js"></script>
-<script src="./src/resourcePanel/ResourcePanelController.js"></script>
-<script src="./src/resourcePanel/ResourcePanelService.js"></script>
-
-<script type="text/javascript" src="app.js"></script>
-<script type="text/javascript" src="appService.js"></script>
-
+<script data-main="./main" src="../node_modules/requirejs/require.js"></script>
 </body>
 </html>

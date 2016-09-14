@@ -134,3 +134,22 @@ span.name {
   font-size:1.1em;
   padding-left:5px;
 }
+
+.md-button-pro{
+    line-height: 6px;
+}
+.md-menu-pro{
+    line-height: 6px;
+    margin-top:16px;
+}
+.md-tooltips-1{
+    margin-top: 12px;
+    margin-left: 30px;
+}
+.md-main-span1{
+    margin-top:25px;
+}
+.md-main-span2{
+    margin-top:16px;
+    margin-left: 13px;
+}
