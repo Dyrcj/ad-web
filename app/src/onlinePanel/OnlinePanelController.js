@@ -1,6 +1,6 @@
 define([],
     function () {
-        function onlinePanelMainController($scope, onlinePanelService, $mdToast, $sessionStorage, $mdBottomSheet, $mdColorUtil, $mdColors, subpub) {
+        function onlinePanelMainController($scope, onlinePanelService, $mdToast, $sessionStorage, $mdBottomSheet, $mdDialog, subpub) {
             $scope.loaded = false;
             $scope.is_alert = false;
             onlinePanelService
@@ -53,10 +53,10 @@ define([],
                 };
                 onlinePanelService.onlineSuccess(data)
                     .then(function (result) {
-                        alert(result);
+                        $mdDialog.show(alert(result));
                     })
                     .catch(function (err) {
-                        alert(err);
+                        $mdDialog.show(alert(err));
                     });
             };
 
@@ -72,13 +72,13 @@ define([],
                     };
                     onlinePanelService.serversEnable(data)
                         .then(function (result) {
-                            alert(JSON.stringify(result));
+                            $mdDialog.show(alert(JSON.stringify(result)));
                         })
                         .catch(function (err) {
-                            alert(JSON.stringify(err));
+                            $mdDialog.show(alert(JSON.stringify(err)));
                         });
                 } else {
-                    alert('服务器状态错误');
+                    $mdDialog.show(alert('服务器状态错误'));
                 }
 
             };
@@ -89,20 +89,26 @@ define([],
                 };
                 onlinePanelService.rollBackFinish(data)
                     .then(function (result) {
-                        alert(result);
+                        $mdDialog.show(alert(result));
                     })
                     .catch(function (err) {
-                        alert(err);
+                        $mdDialog.show(alert(err));
                     });
             };
 
-            $scope.rollBack = function (Business, onlineSelect) {
+            $scope.rollBack = function (Business, OnlineSelect) {
+
+                if (typeof OnlineSelect == 'undefined' || OnlineSelect == null) {
+                    $mdDialog.show(alert('请选择一个服务器回滚'));
+                    return;
+                }
+
                 $mdBottomSheet.show({
                     controllerAs: 'ctrl',
-                    templateUrl: '/app/src/onlinePanel/view/RollBack.html',
+                    templateUrl: '/app/src/onlinePanel/view/Rollback.html',
                     controller: tryRollBack,
                     parent: angular.element(document.getElementById('content')),
-                    locals: {Business: Business, OnlineSelect: onlineSelect}
+                    locals: {Business: Business, OnlineSelect: OnlineSelect}
                 });
             };
 
@@ -110,11 +116,6 @@ define([],
                 $scope.loaded = true;
                 $scope.businessInfo = Business;
                 $scope.serverInfo = OnlineSelect;
-
-                if (typeof OnlineSelect == 'undefined' || OnlineSelect == null) {
-                    alert('请选择一个服务器回滚');
-                    return;
-                }
 
                 var data = {
                     business_id: Business.business_id,
@@ -134,7 +135,7 @@ define([],
                         if ($scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器回滚成功' ||
                             $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器回滚失败') {
                             if (!$scope.loaded) {
-                                alert('服务器' + $scope.serverInfo.server_name + '回滚结束');
+                                $mdDialog.show(alert('服务器' + $scope.serverInfo.server_name + '回滚结束'));
                             }
                             $scope.loaded = true;
                         }
@@ -163,17 +164,31 @@ define([],
             $scope.online = function (Business, OnlineSelect) {
 
                 if (typeof OnlineSelect == 'undefined' || OnlineSelect == null) {
-                    return alert('请选择一个服务器上线');
+                    return $mdDialog.show(alert('请选择一个服务器上线'));
                 }
 
-                if (OnlineSelect.server_type == 'test') {
-                    return alert('内测服务器不能上线');
+                if (OnlineSelect.server_type == 'production') {
+                    $mdBottomSheet.show({
+                        controllerAs: 'ctrl',
+                        templateUrl: '/app/src/onlinePanel/view/Online.html',
+                        controller: tryOnline,
+                        parent: angular.element(document.getElementById('content')),
+                        locals: {Business: Business, OnlineSelect: OnlineSelect}
+                    });
+                } else {
+                    return $mdDialog.show(alert('被选中的并不是生产服务器'));
                 }
 
+            };
+
+            $scope.innerTest = function (Business, OnlineSelect) {
+                /*if (typeof OnlineSelect == 'undefined' || OnlineSelect == null) {
+                 return alert('请选择一个内测服务器');
+                 }*/
                 $mdBottomSheet.show({
                     controllerAs: 'ctrl',
-                    templateUrl: '/app/src/onlinePanel/view/Online.html',
-                    controller: tryOnline,
+                    templateUrl: '/app/src/onlinePanel/view/InnerTest.html',
+                    controller: tryInnerTest,
                     parent: angular.element(document.getElementById('content')),
                     locals: {Business: Business, OnlineSelect: OnlineSelect}
                 });
@@ -202,7 +217,7 @@ define([],
                         if ($scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线成功' ||
                             $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线失败') {
                             if (!$scope.loaded) {
-                                alert('服务器' + $scope.serverInfo.server_name + '上线结束');
+                                $mdDialog.show(alert('服务器' + $scope.serverInfo.server_name + '上线结束'));
                             }
                             $scope.loaded = true;
                         }
@@ -227,25 +242,33 @@ define([],
                 }
             }
 
-            $scope.innerTest = function (Business) {
-                $mdBottomSheet.show({
-                    controllerAs: 'ctrl',
-                    templateUrl: '/app/src/onlinePanel/view/InnerTest.html',
-                    controller: tryInnerTest,
-                    parent: angular.element(document.getElementById('content')),
-                    locals: {Business: Business}
-                });
-            };
+            $scope.sync = function (Business) {
 
-
-            function tryInnerTest($scope, $sessionStorage, $location, subpub, Business) {
-                console.log(JSON.stringify(Business));
-                $scope.loaded = true;
-                $scope.businessInfo = Business;
-                $scope.serverInfo = Business.servers[0];
                 var data = {
                     business_id: Business.business_id
                 };
+
+                if (typeof Business.operations[0] == 'undefined' || Business.operations[0].operation_name == '提交内测失败' ||
+                    Business.operations[0].operation_name == '内测不通过') {
+                    // alert(Business.operations[0].operation_name)
+                    onlinePanelService.sync(data)
+                        .then(function (results) {
+                            console.log(JSON.stringify(results));
+                            showToast(JSON.stringify(results));
+                        }).catch(function (err) {
+                        showToast(JSON.stringify(err));
+                    });
+                } else {
+                    $mdDialog.show(alert('当前业务状态不能同步代码'));
+                }
+
+            };
+
+
+            function tryInnerTest($scope, $sessionStorage, $location, $mdDialog, subpub, Business) {
+                $scope.loaded = true;
+                $scope.businessInfo = Business;
+                $scope.serverInfo = Business.servers[0];
 
                 subpub.subscribe({
                     collectionName: 'online',
@@ -260,7 +283,7 @@ define([],
                         if ($scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线成功' ||
                             $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线失败') {
                             if (!$scope.loaded) {
-                                alert('提交内测结束');
+                                $mdDialog.show(alert('提交内测结束'));
                             }
                             $scope.loaded = true;
                         }
@@ -273,21 +296,25 @@ define([],
 
                 });
 
-                if ($scope.serverInfo.operationStatus.length == 0) {
+                if (typeof $scope.serverInfo == 'undefined' || $scope.serverInfo.operationStatus[$scope.serverInfo.operationStatus.length - 1] == '服务器上线成功') {
+                    $scope.loaded = true;
+                } else {
                     $scope.loaded = false;
-                }
-
-                if (typeof Business.operations[0] == 'undefined' || Business.operations[0].operation_name == '提交内测失败' ||
-                    Business.operations[0].operation_name == '内测不通过') {
-                    // alert(Business.operations[0].operation_name)
-                    $scope.loaded = false;
-                    onlinePanelService.innerTest(data)
+                    var data = {
+                        business_id: Business.business_id,
+                        servers: "[\"" + $scope.serverInfo.server_ip + "\"]"
+                    };
+                    onlinePanelService.online(data)
                         .then(function (results) {
                             console.log(JSON.stringify(results));
                             showToast(JSON.stringify(results));
                         }).catch(function (err) {
                         showToast(JSON.stringify(err));
                     });
+                }
+
+                if ($scope.serverInfo.operationStatus.length == 0) {
+                    $scope.loaded = false;
                 }
 
                 $scope.innerTestFailure = function (business_id) {
@@ -301,7 +328,7 @@ define([],
                             showToast(JSON.stringify(results));
                         })
                         .catch(function (err) {
-                            alert(JSON.stringify(err));
+                            $mdDialog.show(alert(JSON.stringify(err)));
                             $location.path('/#/onlinePanel');
                         });
                 };
@@ -317,7 +344,7 @@ define([],
                                 showToast(JSON.stringify(results));
                             })
                             .catch(function (err) {
-                                alert(JSON.stringify(err));
+                                $mdDialog.show(alert(JSON.stringify(err)));
                             });
                     }
                 };
@@ -339,10 +366,10 @@ define([],
                             };
                             onlinePanelService.opAudit(data)
                                 .then(function (result) {
-                                    alert(JSON.stringify(result));
+                                    $mdDialog.show(alert(JSON.stringify(result)));
                                 })
                                 .catch(function (err) {
-                                    alert(err);
+                                    $mdDialog.show(alert(JSON.stringify(err)));
                                 });
                         }, function () {
                             console.log('cancel');
@@ -374,39 +401,82 @@ define([],
                     });
             };
 
+            function alert(message) {
+                var alert = $mdDialog.alert()
+                    .title('alert')
+                    .textContent(message)
+                    .ok('确定');
+                return alert;
+            }
 
-            function ContactSheetController($scope, $sessionStorage, subpub, serverInfo) {
+            function confirm(message, ev) {
+                var confirm = $mdDialog.confirm()
+                    .title('warning')
+                    .textContent(message)
+                    .targetEvent(ev)
+                    .ok('Do it!')
+                    .cancel('Cancel');
+                return confirm;
+            }
+
+
+            function ContactSheetController($scope, $mdDialog, serverInfo, $sessionStorage) {
                 console.log(JSON.stringify(serverInfo));
                 $scope.serverInfo = serverInfo;
-                $scope.openServer = function (serverId) {
-                    onlinePanelService.openRemoteServer(serverId)
-                        .then(function (result) {
-                            console.log(JSON.stringify(result));
-                        });
-                };
-                $scope.closeServer = function (serverId) {
-                    onlinePanelService.closeRemoteServer(serverId)
-                        .then(function (result) {
-                            console.log(JSON.stringify(result));
-                        });
+                $scope.openServer = function (serverId, ev) {
+
+                    $mdDialog.show(confirm('确定开启服务器吗', ev)).then(function () {
+                        onlinePanelService.openRemoteServer(serverId)
+                            .then(function (result) {
+                                $mdDialog.show(alert(JSON.stringify(result)));
+                            })
+                            .catch(function (result) {
+                                if (result.indexOf('state.sls tomcat.start concurrent=True --out=json ERROR: Minions returned with non-zero exit code')) {
+                                    showToast('服务器已经是开着的了');
+                                } else {
+                                    showToast('未知错误');
+                                }
+                            });
+                    }, function () {
+                        showToast('You decided to keep your debt.');
+                    });
                 };
 
-                /*subpub.subscribe({
-                 collectionName: 'serverinfo',
-                 userId: $sessionStorage.userInfo.user_id,
-                 modelId: serverInfo.server_id
-                 }, function (result) {
-                 if(result['success']) {
-                 $scope.serverInfo.status = result.message.status;
-                 $scope.serverInfo.log = result.message.log;
-                 $scope.serverInfo.version = result.message.version;
-                 $scope.serverInfo.operationStatus = result.message.operationStatus;
-                 $scope.$apply();
-                 } else {
-                 showToast(result.message);
-                 }
-                 console.log(JSON.stringify(result));
-                 });*/
+                $scope.closeServer = function (serverId, ev) {
+
+                    $mdDialog.show(confirm('确定关闭服务器吗', ev)).then(function () {
+                        onlinePanelService.closeRemoteServer(serverId)
+                            .then(function (result) {
+                                $mdDialog.show(alert(JSON.stringify(result)));
+                            })
+                            .catch(function (result) {
+                                if (result.indexOf('state.sls tomcat.stop concurrent=True --out=json ERROR: Minions returned with non-zero exit code')) {
+                                    showToast('服务器已经关闭了');
+                                } else {
+                                    showToast('未知错误');
+                                }
+                            });
+                    }, function () {
+                        showToast('You decided to keep your debt.');
+                    });
+                };
+
+                subpub.subscribe({
+                    collectionName: 'serverinfo',
+                    userId: $sessionStorage.userInfo.user_id,
+                    modelId: serverInfo.server_id
+                }, function (result) {
+                    if (result['success']) {
+                        $scope.serverInfo.status = result.message.status;
+                        $scope.serverInfo.log = result.message.log;
+                        $scope.serverInfo.version = result.message.version;
+                        $scope.serverInfo.operationStatus = result.message.operationStatus;
+                        $scope.$apply();
+                    } else {
+                        showToast(result.message);
+                    }
+                    console.log(JSON.stringify(result));
+                });
                 /*this.serverID = thisServerID;*/
             }
         }

@@ -6,7 +6,7 @@ define([],
                 port: ENV.main_server.port
             }
 
-            this.innerTest = function(data){
+            this.sync = function(data){
                 var url = 'http://'+ ad_config.ip  + ':' + ad_config.port + '/online/innerTest';
                 var defer = $q.defer();
                 $http.post(url,$.param(data))
@@ -35,7 +35,7 @@ define([],
                     if(result['data']['success']) {
                         defer.$$resolve(result['data']['message']);
                     } else {
-
+                        defer.$$reject(result['data']['message']);
                     }
                 }).catch(function (err) {
                     defer.$$reject(err);
@@ -45,13 +45,14 @@ define([],
 
             this.openRemoteServer = function(serverId){
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/startServer/' + serverId;
+                var defer = $q.defer();
                 $http.get(
                     url
                 ).then(function (result) {
                     if(result['data']['success']) {
                         defer.$$resolve(result['data']['message']);
                     } else {
-
+                        defer.$$reject(result['data']['message']);
                     }
                 }).catch(function (err) {
                     defer.$$reject(err);

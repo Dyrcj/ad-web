@@ -12,7 +12,7 @@ define(['./OnlinePanelController', './OnlinePanelService'],
                     });
 
             })
-            .controller('onlinePanelMainController', ['$scope', 'onlinePanelService', '$mdToast', '$sessionStorage', '$mdBottomSheet', '$mdColorUtil', '$mdColors', 'subpub', ctrl.onlinePanelMainController])
+            .controller('onlinePanelMainController', ['$scope', 'onlinePanelService', '$mdToast', '$sessionStorage', '$mdBottomSheet', '$mdDialog', 'subpub', ctrl.onlinePanelMainController])
             .service('onlinePanelService', ['$q', '$http','ENV','AppService', service.OnlinePanelService]);
 
         }

@@ -5,111 +5,7 @@
     </md-input-container>
 </div>
 <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
-<!--<div flex>
-    <div ng-repeat="Business in Businesses | filter:input">
-        <md-subheader md-colors="{'background': 'blue-500'}" class="md-no-sticky" layout="row">
-            <span>{{Business.name}}</span>
-            <md-divider></md-divider>
-            <span>{{Business.version}}</span>
-        </md-subheader>
-        <md-radio-group ng-model="onlineSelect">
-        <md-list-item class="md-2-line" ng-repeat="server in Business.servers | orderBy: '-server_type'"
-                      ng-click="null">
-            <div layout="row" layout-align="end center" class="md-list-item-text">
-                <div layout="column" flex>
-                    <h3>{{ server.server_name }}</h3>
-                    <h4>{{ server.version }}</h4>
-                </div>
-                <p>{{ server.server_ip }}:{{ server.server_port }}</p>
-                <div>
-                    <md-menu>
-                        <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
-                            {{server.operationStatus[server.operationStatus.length - 1]}}
-                        </md-button>
-                        <md-menu-content>
-                            <md-menu-item ng-repeat="operation in server.operationStatus track by $index">
-                                <span>{{operation}}</span>
-                            </md-menu-item>
-                        </md-menu-content>
-                    </md-menu>
-                </div>
-                <div>
-                    <ng-md-icon tooltips tooltip-template='运行中' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'running' " icon="play_circle_outline" size="40" style="font-size: 100px;"></ng-md-icon>
-                    <ng-md-icon tooltips tooltip-template='停止' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'stop' " icon="pause_circle_outline" size="40" style="font-size: 100px;"></ng-md-icon>
-                    <ng-md-icon tooltips tooltip-template='状态未知' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'unknown' " icon="" size="40" style="font-size: 100px;"></ng-md-icon>
-                </div>
-                <div tooltips tooltip-template="{{server.lbStatus == 'STATE_ENABLED' ? '对外' : '对内'}}" tooltip-side="left" tooltip-smart="true">
-                    <ng-md-icon icon="{{server.lbStatus == 'STATE_ENABLED' ? 'sentiment_satisfied' : 'sentiment_very_dissatisfied'}}" ng-init="color = (server.lbStatus == 'STATE_ENABLED' ? 'green' : 'red')" size="40" style="font-size: 100px;fill:'{{color}}'"></ng-md-icon>
-                </div>
-                <span class="md-secondary" ng-if="server.server_type == 'test'"
-                      ng-style="{'color':'orange'}">内测服务器</span>
-                <span class="md-secondary" ng-if="server.server_type == 'production'"
-                      ng-style="{'color':'red'}">生产服务器</span>
-                <md-button class="md-primary" ng-click="getServerInfo(server.server_id)">
-                    <md-tooltip md-direction="Bottom">
-                        服务器详情
-                    </md-tooltip>
-                    <ng-md-icon icon="developer_dashboard" size="40" style="font-size: 100px;fill:light-blue"></ng-md-icon>
-                </md-button>
-                <md-radio-button ng-value="server" aria-label="Custom checkbox" style="font-size: 10px"></md-radio-button>
-            </div>
-        </md-list-item>
-        </md-radio-group>
-        <md-divider></md-divider>
-        <md-grid-tile-footer>
-            <md-button class="md-fab md-primary" ng-click="innerTest(Business)">
-                <md-tooltip md-direction="Bottom">
-                    提交内测
-                </md-tooltip>
-                <ng-md-icon icon="file_upload" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-primary" ng-click="online(Business, onlineSelect)">
-                <md-tooltip md-direction="Bottom">
-                    上线
-                </md-tooltip>
-                <ng-md-icon icon="cloud_upload" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-primary" ng-click="serverEnable(Business, onlineSelect)">
-                <md-tooltip md-direction="Bottom">
-                    对外
-                </md-tooltip>
-                <ng-md-icon icon="launch" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-primary" ng-click="onlineSuccess(Business)">
-                <md-tooltip md-direction="Bottom">
-                    上线完成
-                </md-tooltip>
-                <ng-md-icon icon="cloud_done" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-warn" ng-click="rollBack(Business, onlineSelect)">
-                <md-tooltip md-direction="Bottom">
-                    回滚
-                </md-tooltip>
-                <ng-md-icon icon="undo" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-warn" ng-click="rollBackFinish(Business)">
-                <md-tooltip md-direction="Bottom">
-                    回滚完成
-                </md-tooltip>
-                <ng-md-icon icon="check" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-menu>
-                <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
-                    {{Business.operations[0].operation_name}}
-                </md-button>
-                <md-menu-content>
-                    <md-menu-item ng-repeat="operation in Business.operations | orderBy:'-'">
-                        <span>{{operation.operation_name}}</span>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-        </md-grid-tile-footer>
-        </md-list>
-        <md-divider></md-divider>
-        <md-divider></md-divider>
-    </div>
-</div>-->
-<div flex layout="row">
+<div flex layout="column">
     <md-card ng-repeat="Business in Businesses | filter:input">
         <md-card-title>
             <md-card-title-text>
@@ -120,108 +16,58 @@
         </md-card-title>
         <md-card-content>
             <md-radio-group ng-model="onlineSelect">
-                <md-list-item class="md-3-line" ng-repeat="server in Business.servers | orderBy: '-server_type'"
-                              ng-click="null">
-                    <div layout="row" layout-align="end center" class="md-list-item-text">
-                        <div layout="column" flex>
-                            <h3>{{ server.server_name }}</h3>
-                            <h4>{{ server.version }}</h4>
-                            <p>{{ server.server_ip }}:{{ server.server_port }}</p>
-                        </div>
+                <div ng-repeat="server in Business.servers | orderBy: '-server_type'">
+                    <md-tooltip>
+                        当前版本:{{ server.version }}
+                    </md-tooltip>
+                    <md-list-item class="md-3-line" ng-click="null">
+                        <div layout="row" layout-align="end center" class="md-list-item-text">
+                            <div layout="column" flex>
+                                <h3 flex>{{ server.server_name }}</h3>
+                                <h4 flex>{{ server.version }}</h4>
+                                <p flex>{{ server.server_ip }}:{{ server.server_port }}</p>
+                            </div>
 
-                        <div>
-                            <md-menu>
-                                <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
-                                    {{server.operationStatus[server.operationStatus.length - 1]}}
-                                </md-button>
-                                <md-menu-content>
-                                    <md-menu-item ng-repeat="operation in server.operationStatus track by $index">
-                                        <span>{{operation}}</span>
-                                    </md-menu-item>
-                                </md-menu-content>
-                            </md-menu>
-                        </div>
-                        <div>
-                            <ng-md-icon tooltips tooltip-template='运行中' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'running' " icon="play_circle_outline" size="40" style="font-size: 100px;"></ng-md-icon>
-                            <ng-md-icon tooltips tooltip-template='停止' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'stop' " icon="pause_circle_outline" size="40" style="font-size: 100px;"></ng-md-icon>
-                            <ng-md-icon tooltips tooltip-template='状态未知' tooltip-side="left" tooltip-smart="true" ng-if=" server.status == 'unknown' " icon="" size="40" style="font-size: 100px;"></ng-md-icon>
-                        </div>
-                        <div tooltips tooltip-template="{{server.lbStatus == 'STATE_ENABLED' ? '对外' : '对内'}}" tooltip-side="left" tooltip-smart="true">
-                            <ng-md-icon icon="{{server.lbStatus == 'STATE_ENABLED' ? 'sentiment_satisfied' : 'sentiment_very_dissatisfied'}}" ng-init="color = (server.lbStatus == 'STATE_ENABLED' ? 'green' : 'red')" size="40" style="font-size: 100px;fill:'{{color}}'"></ng-md-icon>
-                        </div>
-                        <span class="md-secondary" ng-if="server.server_type == 'test'"
-                              ng-style="{'color':'orange'}">内测服务器</span>
-                        <span class="md-secondary" ng-if="server.server_type == 'production'"
-                              ng-style="{'color':'red'}">生产服务器</span>
-                        <md-button class="md-primary" ng-click="getServerInfo(server.server_id)">
-                            <md-tooltip md-direction="Bottom">
-                                服务器详情
-                            </md-tooltip>
-                            <ng-md-icon icon="developer_dashboard" size="40" style="font-size: 100px;fill:light-blue"></ng-md-icon>
-                        </md-button>
-                        <md-radio-button ng-value="server" aria-label="Custom checkbox" style="font-size: 10px"></md-radio-button>
-                    </div>
-                </md-list-item>
-                <!--<div ng-repeat="server in Business.servers | orderBy: '-server_type'" layout="column">
-                    <div layout="row">
-                        <span ng-style="{'color':'blue'}">{{ server.server_name }}</span><md-divider></md-divider><span ng-style="{'color':'orange'}">{{ server.server_ip }}:{{ server.server_port }}</span><md-divider></md-divider>{{ server.version }}
-                    </div>
-                    <md-divider></md-divider>
-                    <div layout="row">
-                        <div>
-                            <md-menu-content>
-                                <md-menu-item ng-repeat="operation in server.operationStatus track by $index">
-                                    <span>{{operation}}</span>
-                                </md-menu-item>
-                            </md-menu-content>
-                            <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
-                                {{server.operationStatus[server.operationStatus.length - 1]}}
+                            <div flex>
+                                <md-menu>
+                                    <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
+                                        {{server.operationStatus[server.operationStatus.length - 1]}}
+                                    </md-button>
+                                    <md-menu-content>
+                                        <md-menu-item ng-repeat="operation in server.operationStatus track by $index">
+                                            <span>{{operation}}</span>
+                                        </md-menu-item>
+                                    </md-menu-content>
+                                </md-menu>
+                            </div>
+                            <span flex>{{server.status}}</span>
+                            <span flex>{{server.lbStatus == 'STATE_ENABLED' ? '对外' : '对内'}}</span>
+                            <span flex ng-style="{'color':server.server_type == 'test' ? 'orange':'light-blue'}">{{server.server_type == 'test'? '内测服务器' : '生产服务器'}}</span>
+                            <md-button class="md-fab md-primary" ng-click="getServerInfo(server.server_id)">
+                                <md-tooltip md-direction="Bottom">
+                                    服务器启动日志
+                                </md-tooltip>
+                                <ng-md-icon icon="developer_dashboard" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
                             </md-button>
+                            <md-radio-button class="md-main-span2" ng-value="server" aria-label="Custom checkbox" style="font-size: 10px"></md-radio-button>
                         </div>
-                        <md-button>
-                            <md-tooltip ng-if=" server.status == 'running' ">
-                                运行中
-                            </md-tooltip>
-                            <md-tooltip ng-if=" server.status == 'stop' ">
-                                停止
-                            </md-tooltip>
-                            <md-tooltip ng-if=" server.status == 'unknown' ">
-                                状态未知
-                            </md-tooltip>
-                            <ng-md-icon ng-if=" server.status == 'running' " icon="play_circle_outline" size="40"
-                                        style="font-size: 100px"></ng-md-icon>
-                            <ng-md-icon ng-if=" server.status == 'stop' " icon="pause_circle_outline" size="40"
-                                        style="font-size: 100px"></ng-md-icon>
-                            <ng-md-icon ng-if=" server.status == 'unknown' " icon="" size="40"
-                                        style="font-size: 100px"></ng-md-icon>
-                        </md-button>
-                        <md-button>
-                            <ng-md-icon icon="{{server.lbStatus == 'STATE_ENABLED' ? 'sentiment_satisfied' : 'sentiment_very_dissatisfied'}}" size="40"
-                                        style="font-size: 100px"></ng-md-icon>
-                        </md-button>
-                        <md-button class="md-primary" ng-click="getServerInfo(server.server_id)">
-                            <md-tooltip md-direction="Bottom">
-                                服务器详情
-                            </md-tooltip>
-                            <ng-md-icon icon="developer_dashboard" size="40"
-                                        style="font-size: 100px"></ng-md-icon>
-                        </md-button>
-                        <span flex class="md-secondary md-main-span1" ng-if="server.server_type == 'test'"
-                          ng-style="{'color':'orange'}">内测服务器</span>
-                        <span class="md-secondary" ng-if="server.server_type == 'production'"
-                              ng-style="{'color':'red'}">生产服务器</span>
-                        <md-radio-button class="md-main-span2" aria-label="Custom checkbox" ng-value="server"></md-radio-button>
-                    </div>
-                </div>-->
+                    </md-list-item>
+                </div>
             </md-radio-group>
         </md-card-content>
         <md-divider></md-divider>
         <md-card-actions layout="row" layout-align="end center">
-            <md-button class="md-fab md-primary" ng-click="innerTest(Business)">
+            <md-button class="md-fab md-primary" ng-click="sync(Business)">
+                <md-tooltip md-direction="Bottom">
+                    同步代码
+                </md-tooltip>
+                <ng-md-icon icon="file_upload" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
+            </md-button>
+            <md-button class="md-fab md-primary" ng-click="innerTest(Business, onlineSelect)">
                 <md-tooltip md-direction="Bottom">
                     提交内测
                 </md-tooltip>
-                <ng-md-icon icon="file_upload" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
+                <ng-md-icon icon="cloud_circle" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
             </md-button>
             <md-button class="md-fab md-primary" ng-click="online(Business, onlineSelect)">
                 <md-tooltip md-direction="Bottom">
@@ -233,7 +79,7 @@
                 <md-tooltip md-direction="Bottom">
                     对外
                 </md-tooltip>
-                <ng-md-icon icon="launch" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
+                <ng-md-icon icon="public" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
             </md-button>
             <md-button class="md-fab md-primary" ng-click="onlineSuccess(Business)">
                 <md-tooltip md-direction="Bottom">

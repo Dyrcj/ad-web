@@ -146,7 +146,9 @@ define([],
              $scope.del_pool = false;
              $scope.deletePool = function(){
                  $scope.del_pool = true;
-                 $scope.show_ip = false;
+                 for(var i in $scope.poolIpStates){
+                    $scope.poolIpStates[i] = false;
+                 }
              }
              $scope.cancelPool = function(){
                  $scope.del_pool = false;
@@ -156,7 +158,9 @@ define([],
                  $scope.add_pool = true;
                  $scope.pool_name = "";
                  $scope.description = "";
-                 $scope.show_ip = false;
+                 for(var i in $scope.poolIpStates){
+                    $scope.poolIpStates[i] = false;
+                 }
              }
 
             //处理复选框
@@ -186,15 +190,17 @@ define([],
             };
 
        //池内ip管理
-            $scope.show_ip = false;
-            $scope.IPs = [];
+
+            $scope.IPs = [];//池内ip
             $scope.toggleIp = function(pool_id){
-               if($scope.show_ip){
-                   $scope.show_ip = false;
+
+            console.log(JSON.stringify($scope.poolIpStates));
+               if($scope.poolIpStates[pool_id]){
+                   $scope.poolIpStates[pool_id] = false;
                    $scope.IPs = [];
                }
                else{
-                   $scope.show_ip = true;
+                   $scope.poolIpStates[pool_id] = true;
                    ResourcePanelService
                       .getIps(pool_id)
                       .then(function(res){
@@ -297,6 +303,7 @@ define([],
 
             function updatePoollist(){
                 $scope.poolNames = [];
+                $scope.poolIpStates = {};
                 $scope.loaded = false;
                 ResourcePanelService
                     .getLBPools(id)
@@ -304,6 +311,8 @@ define([],
                        $scope.Pools = [].concat(res);
                        for(var i in res){
                            $scope.poolNames.push(res[i]['pool_name']);
+                           var keyval = res[i]['pool_id'];
+                           $scope.poolIpStates[keyval] = false;
                        }
                        $scope.loaded = true;
                     });

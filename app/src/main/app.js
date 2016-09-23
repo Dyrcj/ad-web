@@ -6,8 +6,8 @@ define(['./appController', './appService'],
                     .defaultIconSet("./assets/svg/avatars.svg", 128)
                     .icon("menu", "./assets/svg/menu.svg", 24);
                 $mdThemingProvider.theme('default')
-                    .primaryPalette('light-blue')
-                    .accentPalette('blue')
+                    .primaryPalette('blue')
+                    .accentPalette('light-blue')
                     .warnPalette('red');
                 $httpProvider.interceptors.push('authHttpResponseInterceptor');
 
