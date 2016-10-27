@@ -7,57 +7,18 @@ define([],
             }
 
             this.sync = function(data){
-                var url = 'http://'+ ad_config.ip  + ':' + ad_config.port + '/online/innerTest';
-                var defer = $q.defer();
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
-
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                var url = 'http://'+ ad_config.ip  + ':' + ad_config.port + '/online/syncToRepository';
+                return AppService.post(url, data);
             }
 
             this.closeRemoteServer = function(serverId){
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/stopServer/' + serverId;
-                var defer = $q.defer();
-                $http.get(
-                    url
-                ).then(function (result) {
-                    console.log(result['data']);
-                    if(result['data']['success']) {
-                        defer.$$resolve(result['data']['message']);
-                    } else {
-                        defer.$$reject(result['data']['message']);
-                    }
-                }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.get(url);
             }
 
             this.openRemoteServer = function(serverId){
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/startServer/' + serverId;
-                var defer = $q.defer();
-                $http.get(
-                    url
-                ).then(function (result) {
-                    if(result['data']['success']) {
-                        defer.$$resolve(result['data']['message']);
-                    } else {
-                        defer.$$reject(result['data']['message']);
-                    }
-                }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.get(url);
             }
 
             this.loadAllBusinesses = function(){
@@ -67,164 +28,52 @@ define([],
 
             this.getRemoteServerInfo = function(serverID){
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/' + serverID;
-                var defer = $q.defer();
-                $http.get(url)
-                    .then(function (result) {
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-
-                        }
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.get(url);
             }
 
             this.testStatus = function(data){
-                var defer = $q.defer();
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/testStatus';
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        console.log(result);
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
-
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.post(url, data);
             }
 
             this.online = function(data){
-                var defer = $q.defer();
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/syncServers';
-                console.log(JSON.stringify(data));
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        console.log(result);
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
+                return AppService.post(url, data);
+            }
 
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+            this.innerTest = function(data){
+                var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/innerTest';
+                return AppService.post(url, data);
             }
 
             this.onlineSuccess = function(data){
-                var defer = $q.defer();
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/syncFinish';
-                console.log(JSON.stringify(data));
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        console.log(result);
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
-
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.post(url, data);
             }
 
             this.serversEnable = function(data){
-                var defer = $q.defer();
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/serversEnable';
-                console.log(JSON.stringify(data));
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        console.log(result);
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
+                return AppService.post(url, data);
+            }
 
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+            this.serversDisable = function(data){
+                var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/serversDisable';
+                return AppService.post(url, data);
             }
 
             this.rollBackFinish = function(data){
-                var defer = $q.defer();
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/rollbackFinish';
-                console.log(JSON.stringify(data));
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        console.log(result);
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
-
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.post(url, data);
             }
 
             this.rollBack = function(data){
-                var defer = $q.defer();
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/rollback';
-                console.log(JSON.stringify(data));
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        console.log(result);
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
-
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.post(url, data);
             }
 
             this.opAudit = function (data) {
-                var defer = $q.defer();
                 var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/online/opAudit';
-                console.log(JSON.stringify(data));
-                $http.post(url,$.param(data))
-                    .then(function (result) {
-                        console.log(result);
-                        if(result['data']['success']) {
-                            defer.$$resolve(result['data']['message']);
-                        } else {
-                            console.log(result['data']['message']);
-                            defer.$$reject(result['data']['message']);
-                        }
-                        console.log(JSON.stringify(result));
-
-                    }).catch(function (err) {
-                    defer.$$reject(err);
-                });
-                return defer.promise;
+                return AppService.post(url, data);
             }
 
         }

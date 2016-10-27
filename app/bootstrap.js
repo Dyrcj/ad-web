@@ -2,11 +2,13 @@ define([
         'angular',
         'angular-animate',
         'angular-aria',
+        'angularCSS',
         'angular-ui-router',
         'angular-material-icons',
         'angular-messages',
         'angular-jwt',
         'angular-material',
+        'angularjs-slider',
         'ngStorage',
         'jquery',
         'socket.io',
@@ -21,17 +23,17 @@ define([
         './src/logPanel/LogPanel',
         './src/main/app'
        ],
-     function(angular, ngAnimate, ngAria, uiRouter, ngIcons, ngMessages, ngJwt, ngMaterial, ngStorage, $, io, socket, config, sso, user, online, manage, person, resource, log, app){
+     function(angular, ngAnimate, ngAria, angularCSS, uiRouter, ngIcons, ngMessages, ngJwt, ngMaterial, ngSlider, ngStorage, $, io, socket, config, sso, user, online, manage, person, resource, log, app){
         function init(){
             angular.module('config', []).constant(config.key, config.value);
-            var sso_module = angular.module('sso', ['ngMaterial', 'ui.router']);
-            var user_module = angular.module('users', [ 'ngMaterial','ui.router']);
-            var online_module = angular.module('onlinePanel', ['ngMaterial', 'ui.router']);
-            var manage_module = angular.module('managePanel', ['ngMaterial', 'ui.router']);
-            var person_module = angular.module('person', ['ngMaterial', 'ui.router']);
-            var resource_module = angular.module('resourcePanel', ['ngMaterial', 'ui.router']);
-            var log_module = angular.module('logPanel', ['ngMaterial', 'ui.router', 'ngMessages']);
-            var app_module = angular.module('starterApp', ['ngMaterial', 'ui.router', 'ngMdIcons', 'ngStorage', 'angular-jwt', 'sso', 'users', 'onlinePanel', 'managePanel', 'person', 'resourcePanel', 'logPanel', 'config']);
+            var sso_module = angular.module('sso', []);
+            var user_module = angular.module('users', []);
+            var online_module = angular.module('onlinePanel', []);
+            var manage_module = angular.module('managePanel', ['rzModule']);
+            var person_module = angular.module('person', []);
+            var resource_module = angular.module('resourcePanel', []);
+            var log_module = angular.module('logPanel', ['ngMessages']);
+            var app_module = angular.module('starterApp', ['ngMaterial', 'ui.router', 'ngMdIcons', 'ngStorage', 'angular-jwt', 'sso', 'users', 'onlinePanel', 'managePanel', 'person', 'resourcePanel', 'logPanel', 'config', 'angularCSS']);
 
             sso.init(sso_module);
             user.init(user_module);

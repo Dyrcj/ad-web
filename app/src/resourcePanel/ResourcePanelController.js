@@ -47,6 +47,9 @@ define([],
                           alert(res);
                           $scope.cancel();
                           updateLBlist();
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
                }
            }
@@ -88,6 +91,9 @@ define([],
                       $scope.password = '';
                       $scope.description = res['description'];
                       $scope.loaded = true;
+                  })
+                  .catch(function(err){
+                      alert(err);
                   });
 
               $scope.submitModify = function(){
@@ -106,6 +112,9 @@ define([],
                           alert(JSON.stringify(res));
                           $scope.cancel();
                           updateLBlist();
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               }
           }
@@ -124,6 +133,9 @@ define([],
                    .then(function(res){
                        $scope.LBs = [].concat(res);
                        $scope.loaded = true;
+                   })
+                   .catch(function(err){
+                       alert(err);
                    });
            }
         }
@@ -191,25 +203,31 @@ define([],
 
        //池内ip管理
 
-            $scope.IPs = [];//池内ip
+            $scope.IPs = {};//池内ip
             $scope.toggleIp = function(pool_id){
 
             console.log(JSON.stringify($scope.poolIpStates));
                if($scope.poolIpStates[pool_id]){
                    $scope.poolIpStates[pool_id] = false;
-                   $scope.IPs = [];
+                   $scope.IPs[pool_id] = [];
                }
                else{
                    $scope.poolIpStates[pool_id] = true;
+                   $scope.IPs[pool_id] = [];
                    ResourcePanelService
                       .getIps(pool_id)
                       .then(function(res){
                          for(var i in res){
-                             $scope.IPs.push({
+                             $scope.IPs[pool_id].push({
                                ip: i,
                                status: res[i]=='STATE_ENABLED'?true:false
                              });
+
                          }
+                      })
+                      .catch(function(err){
+                          $scope.poolIpStates[pool_id] = false;
+                          alert(err);
                       });
                }
             }
@@ -229,22 +247,28 @@ define([],
                    server_port:port,
                    status:sts
                }
-               ResourcePanelService
-                   .postIpState(data)
-                   .then(function(res){
-                       alert(res);
-                       $scope.IPs = [];
-                       ResourcePanelService
-                          .getIps(p_id)
-                          .then(function(res){
-                             for(var i in res){
-                                 $scope.IPs.push({
-                                   ip: i,
-                                   status: res[i]=='STATE_ENABLED'?true:false
-                                 });
-                             }
-                          });
-                   })
+               var str = status ? '是否对外？' : '是否对内';
+               if(confirm(str)){
+                 ResourcePanelService
+                     .postIpState(data)
+                     .then(function(res){
+                         alert(res);
+                        //  $scope.IPs[p_id] = [];
+                        //  ResourcePanelService
+                        //     .getIps(p_id)
+                        //     .then(function(res){
+                        //        for(var i in res){
+                        //            $scope.IPs[p_id].push({
+                        //              ip: i,
+                        //              status: res[i]=='STATE_ENABLED'?true:false
+                        //            });
+                        //        }
+                        //     });
+                     })
+                     .catch(function(err){
+                        alert(err);
+                     });
+                }
             }
 
             $scope.is_empty = false;
@@ -268,6 +292,8 @@ define([],
                              alert(res);
                              $scope.add_pool = false;
                              updatePoollist();
+                         }).catch(function(err){
+                            alert(err);
                          });
                  }
               }
@@ -282,19 +308,19 @@ define([],
                          ResourcePanelService
                              .deletePools(data)
                              .then(function(res){
-                                 if(typeof res == 'string'){
-                                     alert(res);
-                                 }
-                                 else{
-                                     var msg = '错误信息：\n';
-                                     for(var i in res){
-                                       msg += res[i]['pool_name'] + ':' + res[i]['message'] + '\n';
-                                     }
-                                     alert(msg);
-                                 }
+                                 alert(res);
+                                 updatePoollist();
+                                 $scope.selectedPools = [];
+                             })
+                             .catch(function(err){
+                                var msg = '错误信息：\n';
+                                for(var i in err){
+                                  msg += err[i]['pool_name'] + ':' + err[i]['message'] + '\n';
+                                }
+                                alert(msg);
+                                updatePoollist();
+                                $scope.selectedPools = [];
                              });
-                         updatePoollist();
-                         $scope.selectedPools = [];
                      }
 
                  }
@@ -315,6 +341,9 @@ define([],
                            $scope.poolIpStates[keyval] = false;
                        }
                        $scope.loaded = true;
+                    })
+                    .catch(function(err){
+                        alert(err);
                     });
             }
         }

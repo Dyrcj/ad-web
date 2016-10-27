@@ -7,20 +7,12 @@ define(['./LogPanelController', './LogPanelService'],
                     .state('logPanel', {
                         url: "/logPanel",
                         templateUrl: '/app/src/logPanel/view/main.html',
+                        css: ['./assets/common.css', './src/logPanel/css/main.css'],
                         controller: 'LogController'
-                    })
-                    .state('logDetails', {
-                        url: '/logPanel/details',
-                        // params: {
-                        //     b_id:null
-                        // },
-                        templateUrl: '/app/src/logPanel/view/logDetails.html',
-                        controller: 'LogDetailsController'
-                    })
+                    });
             })
             .controller('LogController', ['$scope',  '$q', '$timeout','logService','$state', ctrl.LogController])
-            .controller('LogDetailsController', ['$scope', 'logService', '$state', '$stateParams', ctrl.LogDetailsController])
-            .service('logService', [service.LogService]);
+            .service('logService', ['ENV', '$q', '$http', 'AppService', service.LogService]);
         }
         return {
             init: init

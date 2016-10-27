@@ -1,4 +1,5 @@
 <md-bottom-sheet class="md-has-header" flex>
+    <!-- <md-progress-linear md-mode="indeterminate" ng-show="!loaded_innerTest" flex></md-progress-linear> -->
     <md-card flex layout="row">
         <div flex layout="column">
             <md-card-title >
@@ -13,13 +14,12 @@
             </md-card-title>
             <md-card-actions layout="row" layout-align="start center" >
                 <md-button ng-click="innerTestSuccess(businessInfo.business_id)">内测成功</md-button>
-                <md-button ng-click="innerOP(businessInfo.business_id)">提交审核</md-button>
                 <md-button ng-click="innerTestFailure(businessInfo.business_id)">内测失败</md-button>
             </md-card-actions>
         </div>
-        <md-card-content style="overflow: scroll;" flex layout="column" md-colors="{'background': 'light-blue-100'}" >
+        <md-card-content class="my-scroll" flex layout="column" md-colors="{'background': 'light-blue-100'}" >
             <span ng-repeat="operation in serverInfo.operationStatus track by $index">{{operation}}</span>
         </md-card-content>
-        <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
+        <md-progress-circular ng-show="!loaded_innerTest" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
     </md-card>
 </md-bottom-sheet>

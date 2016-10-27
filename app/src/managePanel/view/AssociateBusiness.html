@@ -1,174 +1,241 @@
-<div style="margin-top:20px;font-size:20px">
-    <span>业务中心 / 业务相关</span>
-    <span flex></span>
-</div>
-<md-button class="md-fab" style="position:fixed;right:10px;top:65px" ng-click="back()" title="返回业务中心">
-    <ng-md-icon icon="arrow_back" size="30" style="fill:#ffffff;font-size:45px"></ng-md-icon>
-</md-button>
-<div layout="column" layout-padding>
-<!-- 服务器信息 -->
-    <div style="padding:20px;text-align:center">
-        <div layout="row" style="padding:10px;font-size:18px;background:rgb(68, 168, 218);box-shadow:1px 1px 1px #888888;;color:white;border-radius:5px 5px 0 0">
-            服务器信息
-        </div>
-        <div layout="row" style="padding:3px;background:rgb(223, 239, 247);font-size:18px;box-shadow:1px 1px 1px #888888;">
-            <div ng-show="is_delete">
-                <md-checkbox ng-checked="isChecked()" ng-click="toggleAll()" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
-            </div>
-            <div flex>服务器名称</div>
-            <div flex>服务器类型</div>
-            <div flex>服务器IP</div>
-            <div flex>服务器端口</div>
-            <div flex>版本</div>
-            <div flex>状态</div>
-        </div>
-        <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-        <div layout="row" style="border-top:1px solid rgb(213, 226, 232);box-shadow:1px 1px 1px #888888;padding:3px;background:white;font-size:18px" ng-repeat="server in Servers track by $index" >
-            <div ng-show="is_delete">
-                <md-checkbox ng-checked="exists(server.server_ip,selected)" ng-click="toggle(server.server_ip,selected)" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
-            </div>
-            <div flex>{{server.server_name}}</div>
-            <div flex>{{server.server_type}}</div>
-            <div flex>{{server.server_ip}}</div>
-            <div flex>{{server.server_port}}</div>
-            <div flex>{{server.version}}</div>
-            <div flex>{{server.status}}</div>
-        </div>
-        <div layout="row" ng-show="is_add" style="padding:3px;background:white;font-size:18px;border-top:1px solid rgb(213, 226, 232);box-shadow:1px 1px 1px #888888">
-            <div flex><input type="text" ng-model="name" style="width:90%;margin-top:4px" required></div>
-            <div flex>
-                <md-input-container style="margin-top:0px;margin-bottom: 0px">
-                    <md-select ng-model="type">
-                        <md-option value="0">test</md-option>
-                        <md-option value="1">production</md-option>
-                    </md-select>
-                </md-input-container>
-            </div>
-            <div flex><input type="text" ng-model="ip" style="width:90%;margin-top:4px"></div>
-            <div flex><input type="number" ng-model="port" style="width:90%;margin-top:4px"></div>
-            <div flex><input type="text" style="width:90%;display:none;margin-top:4px" disabled></div>
-            <div flex><input type="text" style="width:90%;display:none;margin-top:4px" disabled></div>
-        </div>
-        <md-button ng-show="!is_add&&!is_delete" ng-click="addServer()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            添加
-        </md-button>
-        <md-button ng-show="!is_add&&!is_delete" ng-click="deleteServer()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            删除
-        </md-button>
-        <md-button ng-show="is_add||is_delete" ng-click="operation()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            提交
-        </md-button>
-        <md-button ng-show="is_add||is_delete" ng-click="remove()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            取消
-        </md-button>
-    </div>
+<md-toolbar class="my-head" layout="row">
+    <span>业务中心 < 业务相关</span>
+    <md-button class="md-fab" id="my-head-back" aria-label="返回业务中心" ng-click="back()" title="返回业务中心">
+        <ng-md-icon icon="arrow_back" size="30" class="my-head-back-icon"></ng-md-icon>
+    </md-button>
+</md-toolbar>
+<div ng-cloak layout-padding class="my-main-content">
+  <md-content>
+    <md-tabs md-dynamic-height md-border-bottom>
 
-    <!-- 负载均衡信息 -->
-        <md-progress-circular style="margin:40px auto" ng-show="!loaded5" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-        <div ng-show="has_pool" style="padding:20px;text-align:center">
-            <div layout="row" style="padding:10px;font-size:18px;background:rgb(68, 168, 218);box-shadow:1px 1px 1px rgb(68, 168, 218);color:white;border-radius:5px 5px 0 0">
-                负载均衡信息
-            </div>
-            <div layout="row" style="padding:3px;background:whitesmoke;font-size:18px;background:rgb(223, 239, 247);font-size:18px;box-shadow:1px 1px 1px #888888">
-                <div flex>池名称</div>
-                <div flex>描述</div>
-                <div flex>操作</div>
-            </div>
-            <div layout="row" style="padding:3px;background:whitesmoke;font-size:18px;border-top:1px solid rgb(213, 226, 232);box-shadow:1px 1px 1px #888888">
-                <div flex>{{pool_msg.pool_name}}</div>
-                <!-- <div flex>{{pool_msg.description}}</div> -->
-                <div flex>
-                    <md-menu>
-                        <ng-md-icon icon="description" size="18" ng-click="openMenu($mdOpenMenu, $event)"></ng-md-icon>
-                        <md-menu-content layout-padding style="background:rgb(239, 234, 241);max-width:250px;max-height:200px;word-wrap: break-word;white-space:normal">
-                            <div>
-                                {{pool_msg.description}}
-                            </div>
-                        </md-menu-content>
-                    </md-menu>
+      <md-tab label="服务信息">
+        <md-content class="md-padding">
+            <div class="my-center">
+                <div layout="row" layout-padding class="my-table-head">
+                    服务器信息
                 </div>
-                <div flex ng-click="delLB(pool_msg._id)" style="color:blue;color:blue;text-decoration:underline;cursor:pointer">删除</div>
-            </div>
-        </div>
-        <div ng-show="no_pool" style="text-align:center">
-            <span style="font-size:20px">目前还未分配负载均衡，是否<span style="color:blue;color:blue;text-decoration:underline;cursor:pointer" ng-click="addLB()">添加</span></span>
-        </div>
-        <div ng-show="add_pool" layout-padding style="width:400px;margin:0 auto;text-align:left;border-radius:5px;background:rgb(242, 242, 235);box-shadow:1px 1px 1px #888888">
-            <div>
-                <label style="font-size:18px">请选择池</label>
-                <md-input-container style="margin-top:0px;margin-bottom: 0px;margin-left:15px;padding-bottom:12px">
-                    <md-select ng-model="selectedLBPool">
-                        <md-option value="{{Pools.indexOf(pl)}}" ng-repeat="pl in Pools track by $index">{{pl.pool_name}}</md-option>
-                    </md-select>
-                </md-input-container>
-            </div>
-            <div style="text-align:center">
-                <md-button ng-click="submitAdd()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
+                <div layout="row" class="my-table-head2">
+                    <div ng-show="is_delete">
+                        <md-checkbox ng-checked="isChecked()" aria-label="checkAll" ng-click="toggleAll()" class="my-checked-all"></md-checkbox>
+                    </div>
+                    <div flex>服务器名称</div>
+                    <div flex>服务器类型</div>
+                    <div flex>服务器IP</div>
+                    <div flex>服务器端口</div>
+                    <div flex="20">版本</div>
+                    <div flex>状态</div>
+                </div>
+                <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+                <div layout="row" layout-padding class="my-table-row" ng-repeat="server in Servers track by $index" >
+                    <div ng-show="is_delete">
+                        <md-checkbox ng-checked="exists(server.server_ip,selected)" aria-label="server.server_ip" ng-click="toggle(server.server_ip,selected)" class="my-checked"></md-checkbox>
+                    </div>
+                    <div flex>{{server.server_name}}</div>
+                    <div flex>{{server.server_type}}</div>
+                    <div flex>{{server.server_ip}}</div>
+                    <div flex>{{server.server_port}}</div>
+                    <div flex="20">{{server.version}}</div>
+                    <div flex>{{server.status}}</div>
+                </div>
+                <div layout="row" layout-padding ng-show="is_add" class="my-table-row">
+                    <div flex><input type="text" ng-model="name" class="my-add-server" required></div>
+                    <div flex>
+                        <md-input-container class="my-container1">
+                            <md-select ng-model="type" aria-label="server_type">
+                                <md-option value="0">test</md-option>
+                                <md-option value="1">production</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div flex ng-show="type!=1"><input type="text" ng-model="ip" class="my-add-server"></div>
+                    <div flex ng-show="type==1">
+                        <md-input-container class="my-container1">
+                            <md-select ng-model="get_ip" aria-label="server_type" ng-change="selectIp(get_ip)">
+                                <md-option ng-value="proIp.id" ng-repeat="proIp in P_ips">{{proIp.ip}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                    <div flex ng-show="type!=1" ><input type="number" ng-model="port" class="my-add-server"></div>
+                    <div flex ng-show="type==1">
+                        <input type="text" ng-model="proPort" class="my-add-server" required disabled>
+                    </div>
+                    <div flex="20"><input type="text" class="my-input-disabled" disabled></div>
+                    <div flex><input type="text" class="my-input-disabled" disabled></div>
+                </div>
+                <md-button ng-show="!is_add&&!is_delete" ng-click="addServer()" class="md-raised md-primary">
+                    添加
+                </md-button>
+                <md-button ng-show="!is_add&&!is_delete" ng-click="deleteServer()" class="md-raised md-primary">
+                    删除
+                </md-button>
+                <md-button ng-show="is_add||is_delete" ng-click="operation()" class="md-raised md-primary">
                     提交
                 </md-button>
-                <md-button ng-click="cancelAdd()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
+                <md-button ng-show="is_add||is_delete" ng-click="remove()" class="md-raised md-primary">
                     取消
                 </md-button>
             </div>
-        </div>
+        </md-content>
+      </md-tab>
 
-<!-- 人员信息 -->
-    <div style="padding:20px;text-align:center">
-        <div layout="row" style="margin:0px auto;width:450px;padding:10px;font-size:18px;background:rgb(68, 168, 218);box-shadow:1px 1px 1px #888888;color:white;border-radius:5px 5px 0 0">
-            人员信息
-        </div>
-        <div layout="row" style="margin:0px auto;width:450px;padding:3px;background:rgb(223, 239, 247);font-size:18px;box-shadow:1px 1px 1px #888888">
-            <div ng-show="delete_per">
-                <md-checkbox ng-checked="isChecked2()" ng-click="toggleAll2()" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
-            </div>
-            <div flex>姓名</div>
-            <div flex>所属部门</div>
-        </div>
-        <md-progress-circular style="margin:40px auto" ng-show="!loaded3" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-        <div layout="row" style="margin:0px auto;width:450px;padding:3px;font-size:18px;border-top:1px solid rgb(213, 226, 232);box-shadow:1px 1px 1px #888888" ng-repeat="person in PersonsInfo track by $index">
-            <div ng-show="delete_per">
-                <md-checkbox ng-checked="exists2(person.name,selectedPerson)" ng-click="toggle2(person.name,selectedPerson)" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
-            </div>
-            <div flex>{{person.user_name}}</div>
-            <div flex>{{person.department}}</div>
-        </div>
-
-        <div layout="column" ng-show="add_per" layout-padding style="text-align:left;margin:20px auto;margin-bottom:0px;width:600px;border-radius:5px;background-color:rgb(242, 233, 227);box-shadow:1px 1px 1px #888888">
-
-          <div>
-              <label style="font-size:18px">部门</label>
-              <md-input-container style="margin-top:0px;margin-bottom: 0px;margin-left:15px;padding-bottom:12px">
-                  <md-select ng-change="selectDept()" ng-model="selectedDept">
-                      <md-option value="{{dep.id}}" ng-repeat="dep in departments track by $index">{{dep.name}}</md-option>
-                  </md-select>
-              </md-input-container>
+      <md-tab label="负载均衡信息">
+        <md-content class="md-padding my-center">
+          <md-progress-circular ng-show="!loaded5" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+          <div layout-padding class="my-center">
+              <div layout="row" layout-padding class="my-table-head">
+                  负载均衡信息
+              </div>
+              <div layout="row" class="my-table-head2">
+                  <div flex>池名称</div>
+                  <div flex>描述</div>
+                  <div flex>操作</div>
+              </div>
+              <div layout="row" layout-padding class="my-table-row" ng-repeat="pool_msg in PoolMsgs">
+                  <div flex>{{pool_msg.pool_name}}</div>
+                  <div flex>
+                      <md-menu>
+                          <ng-md-icon icon="description" size="18" ng-click="openMenu($mdOpenMenu, $event)"></ng-md-icon>
+                          <md-menu-content layout-padding class="my-description">
+                              <div>
+                                  {{pool_msg.description}}
+                              </div>
+                          </md-menu-content>
+                      </md-menu>
+                  </div>
+                  <div flex ng-click="delLB(pool_msg._id)" class="my-key-name">删除</div>
+              </div>
           </div>
-          <div layout="row">
-              <label style="font-size:18px">人员</label>
-              <md-input-container style="margin-top:0px;margin-bottom: 0px;margin-left:15px;padding-bottom:12px">
-                  <md-select ng-change="selectPersonDept()" ng-model="selectedPersonDept">
-                      <md-option value="{{per.id}}" ng-repeat="per in personsInDept track by $index">{{per.name}}</md-option>
-                  </md-select>
-              </md-input-container>
-              <md-progress-circular  ng-show="!loaded4" style="margin-left:15px" class="md-accent md-hue-1" md-diameter="30"></md-progress-circular>
+          <md-button ng-show="!add_pool" class="md-raised md-primary" ng-click="addLB()">
+              添加
+          </md-button>
+          <div ng-show="add_pool" layout-padding class="my-add-pool">
+              <div>
+                  <label>请选择池</label>
+                  <md-input-container class="my-container2">
+                      <md-select ng-model="selectedLBPool" aria-label="selectport">
+                          <md-option value="{{Pools.indexOf(pl)}}" ng-repeat="pl in Pools track by $index">{{pl.pool_name}}</md-option>
+                      </md-select>
+                  </md-input-container>
+              </div>
+              <div class="my-center">
+                  <md-button ng-click="submitAdd()" class="md-raised md-primary">
+                      提交
+                  </md-button>
+                  <md-button ng-click="cancelAdd()" class="md-raised md-primary">
+                      取消
+                  </md-button>
+              </div>
           </div>
+        </md-content>
+      </md-tab>
 
-          <md-chips ng-model="selected_persons" readonly=true md-removable=true ></md-chips>
+      <md-tab label="人员信息">
+        <md-content class="md-padding my-person-head">
+          <div class="my-center">
+              <div layout="row" layout-padding class="my-table-head">
+                  人员信息
+              </div>
+              <div layout="row" class="my-table-head2">
+                  <div ng-show="delete_per">
+                      <md-checkbox ng-checked="isChecked2()" aria-label="checkAll" ng-click="toggleAll2()" class="my-checked-all"></md-checkbox>
+                  </div>
+                  <div flex>姓名</div>
+                  <div flex>所属部门</div>
+              </div>
+              <md-progress-circular ng-show="!loaded3" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+              <div layout="row" layout-padding class="my-table-row" ng-repeat="person in PersonsInfo track by $index">
+                  <div ng-show="delete_per">
+                      <md-checkbox aria-label="persion.user_name" ng-checked="exists2(person.user_name,selectedPerson)" ng-click="toggle2(person.user_name,selectedPerson)" class="my-checked"></md-checkbox>
+                  </div>
+                  <div flex>{{person.user_name}}</div>
+                  <div flex>{{person.department}}</div>
+              </div>
 
-        </div>
+              <div layout="column" ng-show="add_per" layout-padding class="my-add-person">
 
-        <md-button ng-show="!add_per&&!delete_per" ng-click="addPerson()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            添加
-        </md-button>
-        <md-button ng-show="!add_per&&!delete_per" ng-click="deletePerson()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            删除
-        </md-button>
-        <md-button ng-show="add_per||delete_per" ng-click="subPersons()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            提交
-        </md-button>
-        <md-button ng-show="add_per||delete_per" ng-click="cancelPerson()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
-            取消
-        </md-button>
-    </div>
+                <!-- <div layout="row">
+                    <label class="my-label">部门</label>
+                    <md-input-container class="my-container2">
+                        <md-select ng-change="selectDept()" ng-model="selectedDept" aria-label="selectDept">
+                            <md-option value="{{dep.id}}" ng-repeat="dep in departments track by $index">{{dep.name}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                </div>
+                <div layout="row">
+                    <label class="my-label">人员</label>
+                    <md-input-container class="my-container2">
+                        <md-select ng-change="selectPersonDept()" ng-model="selectedPersonDept" aria-label="selectPerson">
+                            <md-option value="{{per.id}}" ng-repeat="per in personsInDept track by $index">{{per.name}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-progress-circular class="my-small-circular"  ng-show="!loaded4" class="md-accent md-hue-1" md-diameter="30"></md-progress-circular>
+                </div> -->
+                <form ng-submit="$event.preventDefault()" name="searchForm">
+                    <md-autocomplete flex
+                        md-input-name="autocompleteField"
+                        md-selected-item="selectedDept"
+                        md-search-text="searchDept"
+                        md-items="item in querySearch(searchDept, DeptStates)"
+                        md-item-text="item.display"
+                        md-require-match
+                        md-floating-label="部门名称"
+                        ng-blur="selectDept()"
+                        ng-focus="searchPerson=null"
+                        ng-disabled="!loadedDept">
+                      <md-item-template>
+                        <span md-highlight-text="searchText">{{item.display}}</span>
+                      </md-item-template>
+                      <div ng-messages="searchForm.autocompleteField.$error" ng-if="searchForm.autocompleteField.$touched">
+                        <div ng-message="md-require-match">部门不存在</div>
+                      </div>
+                    </md-autocomplete>
 
+                    <md-autocomplete flex
+                        md-input-name="autocompleteField2"
+                        md-selected-item="selectedPersonInDept"
+                        md-search-text="searchPerson"
+                        md-items="item in querySearch(searchPerson, PersonStates)"
+                        md-item-text="item.display"
+                        md-require-match
+                        md-floating-label="人员姓名"
+                        ng-blur="selectPersonDept()"
+                        md-no-cache=true
+                        ng-disabled="!loadedPer">
+                      <md-item-template>
+                        <span md-highlight-text="searchText">{{item.display}}</span>
+                      </md-item-template>
+                      <div ng-messages="searchForm.autocompleteField2.$error" ng-if="searchForm.autocompleteField2.$touched">
+                        <div ng-message="md-require-match">人员不存在</div>
+                      </div>
+                    </md-autocomplete>
+                </form>
+                <md-chips ng-model="selected_persons" readonly=true md-removable=true ></md-chips>
+              </div>
+
+              <md-button ng-show="!add_per&&!delete_per" ng-click="addPerson()" class="md-raised md-primary">
+                  添加
+              </md-button>
+              <md-button ng-show="!add_per&&!delete_per" ng-click="deletePerson()" class="md-raised md-primary">
+                  删除
+              </md-button>
+              <md-button ng-show="add_per||delete_per" ng-click="subPersons()" class="md-raised md-primary">
+                  提交
+              </md-button>
+              <md-button ng-show="add_per||delete_per" ng-click="cancelPerson()" class="md-raised md-primary">
+                  取消
+              </md-button>
+          </div>
+        </md-content>
+      </md-tab>
+
+      <md-tab label="历史版本">
+          <md-content class="md-padding">
+            <div class="my_silder">
+                <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+            </div>
+          </md-content>
+      <md-tab>
+
+    </md-tabs>
+  </md-content>
 </div>

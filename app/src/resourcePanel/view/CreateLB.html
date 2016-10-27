@@ -1,11 +1,11 @@
 <md-dialog aria-label="新建负载均衡">
 
-        <md-dialog-content style="width: 550px;height:800px">
+        <md-dialog-content>
             <md-toolbar>
                 <div class="md-toolbar-tools">
                     <h2>新建负载均衡</h2>
                     <span flex></span>
-                    <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-button class="md-icon-button" aria-label="back" ng-click="cancel()">
                         <ng-md-icon icon="cancel"></ng-md-icon>
                     </md-button>
                 </div>
@@ -13,40 +13,40 @@
             <form name="form_lb" novalidate>
               <div layout="column" layout-padding ng-cloak>
                 <md-content class="md-no-momentum">
-                  <md-input-container style="width: 400px">
+                  <md-input-container>
                     <label>设备类型</label>
                     <md-select ng-model="check_type" name="type" required>
                       <md-option ng-value="0">lb_f5</md-option>
                       <md-option ng-value="1">lb_ad</md-option>
                     </md-select>
-                    <span style="color:red" ng-show="form_lb.type.$error.required">请选择设备类型</span>
+                    <span ng-show="form_lb.type.$error.required">请选择设备类型</span>
                  </md-input-container>
-                 <md-input-container style="width: 400px">
+                 <md-input-container>
                      <label>IP</label>
                      <input name="ip" ng-model="ip" required>
-                     <span style="color:red" ng-show="form_lb.ip.$error.required">IP不能为空</span>
-                     <span style="color:red" ng-show="is_ip">IP格式不正确</span>
+                     <span ng-show="form_lb.ip.$error.required">IP不能为空</span>
+                     <span ng-show="is_ip">IP格式不正确</span>
                  </md-input-container>
-                 <md-input-container style="width: 400px">
+                 <md-input-container>
                      <label>端口</label>
                      <input type="number" ng-model="port" min=0 name="port" required>
-                     <span style="color:red" ng-show="form_lb.port.$error.required">端口不能为空</span>
+                     <span ng-show="form_lb.port.$error.required">端口不能为空</span>
                  </md-input-container>
-                 <md-input-container style="width: 400px">
+                 <md-input-container>
                      <label>用户名</label>
                      <input name="username" ng-model="name" required>
-                     <span style="color:red" ng-show="form_lb.username.$error.required">用户名不能为空</span>
+                     <span ng-show="form_lb.username.$error.required">用户名不能为空</span>
                  </md-input-container>
-                 <md-input-container style="width: 400px">
+                 <md-input-container>
                      <label>密码</label>
-                     <input type="password" ng-model="passowrd" name="name">
+                     <input type="password" ng-model="password" name="name">
                  </md-input-container>
-                 <md-input-container style="width: 400px" >
+                 <md-input-container>
                      <label>描述</label>
                      <textarea ng-model="description"></textarea>
                  </md-input-container>
                 <div layout-align="center" layout="row">
-                  <md-button type='submit' ng-disabled="form_lb.type.$invalid||form_lb.ip.$invalid||form_lb.port.$invalid||form_lb.username.$invalid" class="md-raised md-primary" style="width:20px" ng-click="submitCreate()">提交</md-button>
+                  <md-button type='submit' ng-disabled="form_lb.type.$invalid||form_lb.ip.$invalid||form_lb.port.$invalid||form_lb.username.$invalid" class="md-raised md-primary" ng-click="submitCreate()">提交</md-button>
                 </div>
 
               </div>

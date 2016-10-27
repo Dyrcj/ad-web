@@ -1,9 +1,12 @@
-<div layout="column" ng-cloak>
-  <md-content class="md-padding">
-    <md-progress-circular style="margin:40px auto" ng-show="false" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+<md-toolbar class="my-head" layout="row">
+    <span>操作日志</span>
+</md-toolbar>
+<div class="my-main-content">
+  <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+  <md-content class="md-padding my-shadow" md-colors="{background:'deep-purple-50'}">
     <form ng-submit="$event.preventDefault()" name="searchForm">
-
       <div layout="row">
+
         <md-autocomplete flex
             md-input-name="autocompleteField"
             md-selected-item="selectedBusiness"
@@ -19,6 +22,7 @@
             <div ng-message="md-require-match">业务名不存在</div>
           </div>
         </md-autocomplete>
+
         <md-autocomplete flex
             md-input-name="autocompleteField2"
             md-selected-item="selectedPerson"
@@ -34,42 +38,59 @@
             <div ng-message="md-require-match">姓名不存在</div>
           </div>
         </md-autocomplete>
-        <span flex></span>
-      </div>
 
-      <div layout="row">
-        <div flex style="padding-top:20px">
+        <div flex class="my-time">
             <label><strong>起始时间</strong></label>
-            <md-datepicker ng-model="startTime" md-open-on-focus></md-datepicker>
+            <md-datepicker ng-model="startTime" md-open-on-focus ng-change="updateEnd()"></md-datepicker>
         </div>
-        <div flex style="padding-top:20px">
+
+        <div flex class="my-time">
         <label><strong>截止时间</strong></label>
-            <md-datepicker ng-model="endTime" md-min-date="startTime" md-open-on-focus></md-datepicker>
+            <md-datepicker ng-model="endTime" md-min-date="endTimeStart" md-open-on-focus></md-datepicker>
         </div>
-        <div flex style="text-align:center">
-          <md-button class="md-fab" title="搜索">
-              <ng-md-icon icon="search" style="fill:#ffffff;font-size:45px" size="35"></md-icon>
+
+        <div flex="8" class="my-center">
+          <md-button class="md-fab" aria-label="search" ng-click="search()">
+              <md-tooltip md-direction="Bottom">
+                  搜索
+              </md-tooltip>
+              <ng-md-icon icon="search" class="my-search-icon" size="35"></md-icon>
           </md-button>
         </div>
 
-      </div>
-
-      <!-- {{startTime.toLocaleDateString().split('/').join('-')}} -->
+    </div>
     </form>
   </md-content>
 
-  <div flex layout-padding style="text-align:center;width:60%;margin:20px auto">
-      <div layout="row" class="table-row" style="background:rgb(68, 168, 218);color:#ffffff;box-shadow:1px 1px 1px #888888;font-weight:bold;font-size:20px;border-radius:5px 5px 0 0">
-          <div flex>时间</div>
-          <div flex>详情</div>
-      </div>
-      <md-progress-circular style="margin:40px auto" ng-show="false" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-      <div layout="row" class="table-row" style="box-shadow:1px 1px 1px #888888;background:#ffffff;font-size:15px;border-top:1px solid rgb(213, 226, 232)">
-          <div flex>2016-09-12</div>
-          <div flex>
-              <ng-md-icon icon="description" size="18" ng-click="openDetails()"></ng-md-icon>
-          </div>
-      </div>
+  <div class="my-search-input" layout="row">
+      <md-input-container flex>
+          <label>搜索框</label>
+          <input ng-model="input">
+      </md-input-container>
+      <span flex></span>
   </div>
+
+  <md-content class="md-padding" layout="row" class="my-content" layout-wrap>
+    <md-card flex="33" md-theme-watch ng-repeat="log in Logs | filter:input" class="my-card">
+        <md-card-header>
+          <md-card-header-text>
+            <span class="md-title">
+                <span class="md-headline">{{log.business}}</span>
+            </span>
+            <span class="md-title">
+                <ng-md-icon icon="person" size="15"></ng-md-icon>
+                <span class="md-subhead">{{log.user}}</span>
+            </span>
+            <span class="md-title">
+                <ng-md-icon icon="alarm" size="15"></ng-md-icon>
+                <span class="md-subhead">{{log.date}}</span>
+            </span>
+          </md-card-header-text>
+        </md-card-header>
+        <md-card-content>
+            <div ng-repeat="opts in log.operations">{{(opts.create_at | date: 'yyyy-MM-dd HH:mm:ss.sss' )}}&nbsp;&nbsp;&nbsp;{{opts.operation_name}}</div>
+        </md-card-content>
+      </md-card>
+  </md-content>
 
 </div>

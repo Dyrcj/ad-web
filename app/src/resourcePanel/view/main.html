@@ -1,17 +1,25 @@
-<md-content>
-    <div style="margin-bottom:20px">
-        <h2 style="margin-bottom:0px">负载均衡管理</h2>
-    </div>
-    <md-input-container class="md-block" flex>
-        <label>搜索框</label>
-        <input ng-model="input">
-    </md-input-container>
-    <md-button ng-click="addLB()" class="md-raised" style="background:rgb(68, 168, 218);color:white;width:120px">
-        新建负载均衡
-    </md-button>
+<md-toolbar class="my-head" layout="row">
+    <span>资源中心</span>
+</md-toolbar>
+<div layout-padding class="my-main-content">
+    <md-content>
+      <div class="my-head-name">
+          <h2>负载均衡管理</h2>
+      </div>
+      <md-input-container class="md-block" flex>
+          <label>搜索框</label>
+          <input ng-model="input">
+      </md-input-container>
+      <md-button class="md-fab" aria-label="新建负载均衡" ng-click="addLB()">
+          <md-tooltip md-direction="Bottom">
+              新建负载均衡
+          </md-tooltip>
+          <ng-md-icon icon="add" size="30" class="my-btn-add"></ng-md-icon>
+      </md-button>
+    </md-content>
     <div layout="column" ng-cloak>
-        <md-content flex layout-padding style="text-align:center">
-            <div layout="row" style="background:rgb(68, 168, 218);color:#ffffff;font-size:20px;box-shadow:1px 1px 1px #888888;border-radius:5px 5px 0 0">
+        <md-content flex layout-padding class="my-center">
+            <div layout="row" class="my-table-head">
                 <div flex>IP</div>
                 <div flex>端口</div>
                 <div flex>用户名</div>
@@ -19,16 +27,16 @@
                 <div flex>描述</div>
                 <div flex>操作</div>
             </div>
-            <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-            <div layout="row" style="background:white;font-size:15px;box-shadow:1px 1px 1px #888888;border-top:1px solid rgb(213, 226, 232)" ng-repeat="LB in LBs | filter:input">
-                <div flex><span style="color:blue;text-decoration:underline;cursor:pointer" href="#" ng-click="LBcenter(LB.lb_id)">{{LB.lb_ip}}</span></div>
+            <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+            <div layout="row" class="my-table-row" ng-repeat="LB in LBs | filter:input">
+                <div flex><span class="my-key-name" href="#" ng-click="LBcenter(LB.lb_id)">{{LB.lb_ip}}</span></div>
                 <div flex>{{LB.port}}</div>
                 <div flex>{{LB.user_name}}</div>
                 <div flex>{{LB.lb_type}}</div>
                 <div flex>
                     <md-menu>
                         <ng-md-icon icon="description" size="18" ng-click="openMenu($mdOpenMenu, $event)"></ng-md-icon>
-                        <md-menu-content layout-padding style="background:rgb(239, 234, 241);max-width:250px;max-height:200px;word-wrap: break-word;white-space:normal">
+                        <md-menu-content layout-padding class="my-description">
                             <div>
                                 {{LB.description}}
                             </div>
@@ -36,11 +44,10 @@
                     </md-menu>
                 </div>
                 <div flex>
-                    <span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="modifyLB(LB.lb_id)">修改</span> /
-                    <span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="deleteLB(LB.lb_id)">删除</span>
+                    <ng-md-icon icon="create" class="my-operation-modify" size="18" title="修改" ng-click="modifyLB(LB.lb_id)"></ng-md-icon>
+                    <ng-md-icon icon="delete" class="my-operation-delete" size="18" title="删除" ng-click="deleteLB(LB.lb_id)"></ng-md-icon>
                 </div>
             </div>
         </md-content>
     </div>
-
-</md-content>
+</div>

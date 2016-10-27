@@ -1,35 +1,41 @@
-<md-input-container class="md-block" flex>
-    <label>搜索框</label>
-    <input ng-model="input">
-</md-input-container>
-<md-button ng-click="createBusiness()" class="md-raised" style="background:rgb(68, 168, 218);color:white">
-    新建业务
-</md-button>
-<div layout="column" ng-cloak>
-    <div flex layout-padding style="text-align:center">
-        <div layout="row" class="table-row" style="background:rgb(68, 168, 218);color:#ffffff;box-shadow:1px 1px 1px #888888;font-weight:bold;font-size:20px;border-radius:5px 5px 0 0">
-            <div flex="40">业务名</div>
-            <div flex="40">版本号</div>
-            <div flex="40">git名称</div>
-            <div flex="20">上线次数</div>
-            <div flex="40">最近一次上线</div>
-            <div flex="20">操作</div>
-        </div>
-        <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-        <div layout="row" class="table-row" style="box-shadow:1px 1px 1px #888888;background:#ffffff;font-size:15px;border-top:1px solid rgb(213, 226, 232)" ng-repeat="business in Businesses | filter:input">
-            <div flex="40"><span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="AssociateBusiness(business.business_id)">{{business.name}}</span></div>
-            <div flex="40">{{business.current_version}}</div>
-            <div flex="40">{{business.git_name}}</div>
-            <div flex="20">{{business.online_times}}</div>
-            <div flex="40">{{business.last_online_time}}</div>
-            <div flex="20">
-                <span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="modifyBusiness(business.business_id)">
-                    修改
-                </span>/
-                <span style="color:blue;text-decoration:underline;cursor:pointer" ng-click="deleteBusiness(business.business_id)">
-                    删除
-                </span>
-            </div>
-        </div>
-    </div>
+<md-toolbar class="my-head" layout="row">
+    <span>业务中心</span>
+</md-toolbar>
+<div layout-padding class="my-main-content">
+  <md-content>
+    <md-input-container class="md-block" flex>
+        <label>搜索框</label>
+        <input ng-model="input">
+    </md-input-container>
+    <md-button class="md-fab" aria-label="新建业务" ng-click="createBusiness()">
+        <md-tooltip md-direction="Bottom">
+            新建业务
+        </md-tooltip>
+        <ng-md-icon icon="add" size="30" class="my-btn-add"></ng-md-icon>
+    </md-button>
+  </md-content>
+  <div layout="column">
+        <md-content layout-padding flex class="my-center">
+          <div layout="row" class="table-row my-table-head">
+              <div flex="40">业务名</div>
+              <div flex="40">版本号</div>
+              <div flex="40">git名称</div>
+              <div flex="20">上线次数</div>
+              <div flex="40">最近一次上线</div>
+              <div flex="20">操作</div>
+          </div>
+          <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+          <div layout="row" class="table-row my-table-row" ng-repeat="business in Businesses | filter:input">
+              <div flex="40"><span class="my-key-name" ng-click="AssociateBusiness(business.business_id)">{{business.name}}</span></div>
+              <div flex="40">{{business.current_version}}</div>
+              <div flex="40">{{business.git_name}}</div>
+              <div flex="20">{{business.online_times}}</div>
+              <div flex="40">{{business.last_online_time}}</div>
+              <div flex="20">
+                  <ng-md-icon icon="create" class="my-operation-modify" size="18" title="修改" ng-click="modifyBusiness(business.business_id)"></ng-md-icon>
+                  <ng-md-icon icon="delete" class="my-operation-delete" size="18" title="删除" ng-click="deleteBusiness(business.business_id)"></ng-md-icon>
+              </div>
+          </div>
+      </md-content>
+  </div>
 </div>

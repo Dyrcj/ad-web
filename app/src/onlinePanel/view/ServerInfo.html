@@ -1,4 +1,4 @@
-<md-bottom-sheet layout="row"  flex style="max-height: 500px">
+<md-bottom-sheet layout="row"  flex class="my-serverinfo">
     <md-card flex>
         <md-card-title >
             <md-card-title-text>
@@ -13,16 +13,16 @@
             <md-button ng-click="openServer(serverInfo.server_id)">开启服务器</md-button>
             <md-button ng-click="closeServer(serverInfo.server_id)">关闭服务器</md-button>
         </md-card-actions>
-        <md-card-content style="overflow: scroll;" layout="column" md-colors="{'background': 'light-blue-100'}" >
+        <md-card-content class="my-scroll" layout="column" md-colors="{'background': 'light-blue-100'}" >
                 <!--<div md-colors="{'background': 'light-blue-100'}" ng-repeat="operation in serverInfo.operationStatus">-->
                     <span ng-repeat="operation in serverInfo.operationStatus">{{operation}}</span>
                 <!--</div>-->
         </md-card-content>
     </md-card>
-    <div flex style="overflow: scroll;">
+    <div flex class="my-scroll">
         <md-input-container>
             <label flex>Tomcat Log</label>
-            <textarea disabled flex style="width: 800px">{{serverInfo.log}}</textarea>
+            <textarea disabled flex class="my-textarea">{{serverInfo.log}}</textarea>
         </md-input-container>
     </div>
 </md-bottom-sheet>

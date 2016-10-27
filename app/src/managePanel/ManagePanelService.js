@@ -48,6 +48,12 @@ define([],
                return AppService.post(url, data);
            }
 
+  //获取可选ip
+          this.getPoolIps = function(business_id) {
+              var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/server/servers/' + business_id;
+              return AppService.get(url);
+          }
+
    //删除关联服务器
            this.deleteAssociateServer = function(data){
                var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/business/deleteServer';
@@ -106,6 +112,11 @@ define([],
            this.deletePool = function(id){
                var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/business/lbPool/' + id;
                return AppService.delete(url);
+           }
+  //获取历史版本
+           this.getHistoryVersion = function(id){
+               var url = 'http://' + ad_config.ip + ':' + ad_config.port + '/business/versions/' + id;
+               return AppService.get(url);
            }
        }
 

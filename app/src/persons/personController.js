@@ -1,4 +1,4 @@
-define([], 
+define([],
     function(){
         function personController($scope,personService,$mdDialog,$state){
 
@@ -10,6 +10,9 @@ define([],
                 .then(function (personList) {
                     $scope.personList = [].concat(personList);
                     $scope.loaded = true;
+                })
+                .catch(function(err){
+                    alert(err);
                 });
 
             /**
@@ -38,6 +41,9 @@ define([],
                     $scope.businessList = [].concat(data["authorizedBusinesses"]);
                     $scope.noAuthBusinessList = [].concat(data["unauthorizedBusinesses"]);
                     $scope.loaded = true;
+                })
+                .catch(function(err){
+                    alert(err);
                 });
 
 

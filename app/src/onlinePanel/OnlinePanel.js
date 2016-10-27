@@ -8,6 +8,7 @@ define(['./OnlinePanelController', './OnlinePanelService'],
                     .state('onlinePanel', {
                         url: "/onlinePanel",
                         templateUrl: '/app/src/onlinePanel/view/main.html',
+                        css: ['./assets/common.css', './src/onlinePanel/css/main.css'],
                         controller: 'onlinePanelMainController'
                     });
 

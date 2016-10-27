@@ -1,37 +1,36 @@
-<div style="margin-top:20px;font-size:20px">
-    <span>负载均衡管理 / 负载均衡中心</span>
-    <span flex></span>
-</div>
-<md-button class="md-fab" style="position:fixed;right:10px;top:65px" ng-click="back()" title="返回业务中心">
-    <ng-md-icon icon="arrow_back" size="30" style="fill:#ffffff;font-size:45px"></ng-md-icon>
-</md-button>
+<md-toolbar class="my-head" layout="row">
+    <span>资源中心 < 池管理</span>
+    <md-button class="md-fab" aria-label="返回资源中心"  id="my-head-back" ng-click="back()" title="返回资源中心">
+        <ng-md-icon icon="arrow_back" size="30" class="my-head-back-icon"></ng-md-icon>
+    </md-button>
+</md-toolbar>
 <!-- 池信息 -->
-<div style="padding:20px;text-align:center;width:600px;margin:0 auto">
-    <div layout="row" style="padding:10px;font-size:18px;background:rgb(68, 168, 218);box-shadow:1px 1px 1px #888888;color:white;border-radius:5px 5px 0 0">
+<div class="my-lbcenter">
+    <div layout="row" layout-padding class="my-table-head">
         池信息
     </div>
-    <div layout="row" style="padding:3px;background:rgb(223, 239, 247);font-size:18px;box-shadow:1px 1px 1px #888888">
+    <div layout="row" class="my-table-head2">
         <div ng-show="del_pool">
-            <md-checkbox ng-checked="isChecked()" ng-click="toggleAll()" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
+            <md-checkbox aria-label="checkAll" ng-checked="isChecked()" ng-click="toggleAll()" class="my-checked-all"></md-checkbox>
         </div>
         <div flex>池名称</div>
         <div flex>描述</div>
     </div>
-    <md-progress-circular style="margin:40px auto" ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
-    <div layout="column" style="padding:3px;background:white;font-size:18px;box-shadow:1px 1px 1px #888888" ng-repeat="pl in Pools" >
+    <md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
+    <div layout="column" layout-padding class="my-table-row" ng-repeat="pl in Pools" >
         <div layout="row">
             <div ng-show="del_pool">
-                <md-checkbox ng-checked="exists(pl.pool_name,selectedPools)" ng-click="toggle(pl.pool_name,selectedPools)" style="margin-left:10px;margin-bottom: 0px"></md-checkbox>
+                <md-checkbox aria-label="checkPool" ng-checked="exists(pl.pool_name,selectedPools)" ng-click="toggle(pl.pool_name,selectedPools)" class="my-checked"></md-checkbox>
             </div>
             <div flex>
                 {{pl.pool_name}}
-                <ng-md-icon style="cursor:pointer" ng-show="!poolIpStates[pl.pool_id]" ng-click="toggleIp(pl.pool_id)" size="16" icon="expand_more"></ng-md-icon>
-                <ng-md-icon style="cursor:pointer" ng-show="poolIpStates[pl.pool_id]" ng-click="toggleIp(pl.pool_id)" size="16" icon="expand_less"></ng-md-icon>
+                <ng-md-icon ng-show="!poolIpStates[pl.pool_id]" ng-click="toggleIp(pl.pool_id)" size="16" icon="expand_more"></ng-md-icon>
+                <ng-md-icon ng-show="poolIpStates[pl.pool_id]" ng-click="toggleIp(pl.pool_id)" size="16" icon="expand_less"></ng-md-icon>
             </div>
             <div flex>
                 <md-menu>
                     <ng-md-icon icon="description" size="18" ng-click="openMenu($mdOpenMenu, $event)"></ng-md-icon>
-                    <md-menu-content layout-padding style="background:rgb(239, 234, 241);max-width:250px;max-height:200px;word-wrap: break-word;white-space:normal">
+                    <md-menu-content layout-padding class="my-description">
                         <div>
                             {{pl.description}}
                         </div>
@@ -39,18 +38,18 @@
                 </md-menu>
             </div>
         </div>
-        <div ng-show="poolIpStates[pl.pool_id]" layout-padding style="background:rgb(224, 243, 244);font-size:18px">
+        <div ng-show="poolIpStates[pl.pool_id]" layout-padding class="my-poolstate-head">
             <div layout="row">
                 <div flex>成员</div>
                 <div flex="30">操作</div>
                 <div flex="30">状态</div>
             </div>
-            <div layout="row" ng-repeat="ips in IPs">
+            <div layout="row" ng-repeat="ips in IPs[pl.pool_id]">
                 <div flex>
                     {{ips.ip}}
                 </div>
                 <div flex="30">
-                    <md-switch ng-model="ips.status" ng-change="submitState(pl.pool_id,ips.ip,ips.status)" style="width:40px;margin:0 auto;padding:0;height:20px"></md-switch>
+                    <md-switch ng-model="ips.status" ng-change="submitState(pl.pool_id,ips.ip,ips.status)" class="my-switch"></md-switch>
                 </div>
                 <div flex="30" ng-show="ips.status">对外</div>
                 <div flex="30" ng-show="!ips.status">对内</div>
@@ -58,27 +57,27 @@
         </div>
     </div>
 
-    <div ng-show="add_pool" layout-padding style="margin-top:20px;text-align:left;border-radius:5px;background:rgb(242, 242, 235);box-shadow:1px 1px 1px #888888">
+    <div ng-show="add_pool" layout-padding class="my-add-pool">
       <div>
-          <label style="margin-right:5px">池名称</label>
+          <label class="my-pool-name">池名称</label>
           <input type="text"  name="pool_name" ng-model="pool_name" required>
-          <span style="color:red" ng-show="is_empty" >池名称不能为空</span>
+          <span ng-show="is_empty" >池名称不能为空</span>
       </div>
       <div layout="row">
-          <label style="margin-right:8px;margin-left:14px">描述</label>
+          <label class="my-input-description">描述</label>
           <textarea name="description" ng-model="description" cols="30" rows="5"></textarea>
       </div>
     </div>
-    <md-button ng-show="!add_pool&&!del_pool" ng-click="addPool()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
+    <md-button ng-show="!add_pool&&!del_pool" ng-click="addPool()" class="md-raised md-primary">
         添加
     </md-button>
-    <md-button ng-show="!add_pool&&!del_pool" ng-click="deletePool()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
+    <md-button ng-show="!add_pool&&!del_pool" ng-click="deletePool()" class="md-raised md-primary">
         删除
     </md-button>
-    <md-button ng-show="add_pool||del_pool" ng-click="submitPool()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
+    <md-button ng-show="add_pool||del_pool" ng-click="submitPool()" class="md-raised md-primary">
         提交
     </md-button>
-    <md-button ng-show="add_pool||del_pool" ng-click="cancelPool()" class="md-raised" style="background:rgb(68, 168, 218);color:#ffffff">
+    <md-button ng-show="add_pool||del_pool" ng-click="cancelPool()" class="md-raised md-primary">
         取消
     </md-button>
 </div>

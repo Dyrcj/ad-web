@@ -3,8 +3,10 @@ require.config({
         'angular':'../node_modules/angular/angular',
         'angular-animate':'../node_modules/angular-animate/angular-animate',
         'angular-aria':'../node_modules/angular-aria/angular-aria',
+        'angularCSS':'../node_modules/angular-css/angular-css',
         'angular-ui-router':'../node_modules/angular-ui-router/release/angular-ui-router',
         'angular-material-icons':'../node_modules/angular-material-icons/angular-material-icons',
+        'angularjs-slider':'../node_modules/angularjs-slider/dist/rzslider.min',
         'angular-messages':'../node_modules/angular-messages/angular-messages',
         'angular-jwt':'../node_modules/angular-jwt/dist/angular-jwt',
         'angular-material':'../node_modules/angular-material/angular-material',
@@ -22,6 +24,9 @@ require.config({
             deps:['angular']
         },
         'angular-aria': {
+            deps:['angular']
+        },
+        'angularCSS': {
             deps:['angular']
         },
         'angular-ui-router': {
@@ -48,6 +53,9 @@ require.config({
         'socket.io': {
             deps:['angular', 'socket'],
             exports: 'io'
+        },
+        'angularjs-slider': {
+            deps:['angular']
         }
     }
 });

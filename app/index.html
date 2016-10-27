@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title>Angular Material - Starter App</title>
+    <title>自动上线</title>
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,12 +10,11 @@
 
     <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,400italic'>
     <link rel="stylesheet" href="../node_modules/angular-material/angular-material.css"/>
+    <!-- <link rel="stylesheet" href="./src/angularjs-silder/rzslider.css"/> -->
+    <link rel="stylesheet" href="../node_modules/angularjs-slider/dist/rzslider.min.css"/>
     <link rel="stylesheet" href="assets/app.css"/>
 
     <style type="text/css">
-        /**
-         * Hide when Angular is not yet loaded and initialized
-         */
         [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
             display: none !important;
         }
@@ -24,18 +23,10 @@
 </head>
 
 <body layout="column" ng-controller="baseController as bl" ng-cloak>
-
-<md-toolbar layout="row">
-    <md-button class="menu" hide-gt-sm aria-label="Show User List">
-        <md-icon md-svg-icon="menu"></md-icon>
-    </md-button>
-    <h1 style="margin-left:10px">自动上线</h1>
-    <span flex></span>
-    <md-button  ng-click="logout()">退出登录</md-button>
-</md-toolbar>
-<md-content layout="row" flex>
-    <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15" style="box-shadow:1px 1px 3px #888888">
+<div layout="row" flex>
+    <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" md-component-id="left" flex="15" style="box-shadow:1px 1px 3px #888888;min-width:216px">
         <md-list flex >
+            <md-list-item style="margin:30px 0;padding:2px"><img style="margin:0 auto" src="./assets/images/main-icon.jpg" alt="AD" /></md-list-item>
             <md-list-item >
                 <md-button ui-sref="onlinePanel" style="margin:0;width:100%;padding-left:36px">
                 <ng-md-icon icon="present_to_all" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
@@ -54,40 +45,43 @@
                   资源中心
                 </md-button>
             </md-list-item>
-            <md-list-item>
+            <!-- <md-list-item>
                 <md-button ui-sref="state5" style="margin:0;width:100%;padding-left:36px">
                   <ng-md-icon icon="settings" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
                   系统配置
                 </md-button>
-            </md-list-item>
-            <md-list-item>
+            </md-list-item> -->
+            <!-- <md-list-item>
                 <md-button ui-sref="person" style="margin:0;width:100%;padding-left:36px">
                   <ng-md-icon icon="person" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
                   用户管理
                 </md-button>
-            </md-list-item>
-            <md-list-item>
+            </md-list-item> -->
+            <!-- <md-list-item>
                 <md-button ui-sref="state7" style="margin:0;width:100%;padding-left:36px">
                   <ng-md-icon icon="trending_up" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
                   统计报表
                 </md-button>
-            </md-list-item>
+            </md-list-item> -->
             <md-list-item>
                 <md-button ui-sref="logPanel" style="margin:0;width:100%;padding-left:36px">
                   <ng-md-icon icon="insert_drive_file" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
                   操作日志
                 </md-button>
             </md-list-item>
+            <md-list-item>
+                <md-button ui-sref="onlinePanel" style="margin:0;width:100%;padding-left:36px" ng-click="logout()">
+                  <ng-md-icon icon="logout" style="position:absolute;height:16px;left:38px;top:5px"></ng-md-icon>
+                  退出登录
+                </md-button>
+            </md-list-item>
         </md-list>
     </md-sidenav>
 
-    <md-content flex id="content" layout="row">
-
-        <md-content flex>
-            <div ui-view></div>
-        </md-content>
+    <md-content flex id="content" style="padding:0">
+        <div ui-view style="overflow-y:auto;height:100%"></div>
     </md-content>
-</md-content>
+</div>
 <script data-main="./main" src="../node_modules/requirejs/require.js"></script>
 </body>
 </html>

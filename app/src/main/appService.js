@@ -6,7 +6,10 @@ define(['socket.io'], function(io){
             $http.get(
                 url
             ).then(function (result) {
-                defer.$$resolve(result['data']['message']);
+                if(result['data']['success'])
+                    defer.$$resolve(result['data']['message']);
+                else
+                    defer.$$reject(result['data']['message']);
             }).catch (function (err) {
                 defer.$$reject(err);
             });
@@ -19,7 +22,10 @@ define(['socket.io'], function(io){
                 url,
                 $.param(data)
             ).then(function (result) {
-                defer.$$resolve(result['data']['message']);
+                if(result['data']['success'])
+                    defer.$$resolve(result['data']['message']);
+                else
+                    defer.$$reject(result['data']['message']);
             }).catch(function (err) {
                 defer.$$reject(err);
             });
@@ -31,7 +37,10 @@ define(['socket.io'], function(io){
             $http.delete(
                 url
             ).then(function (result) {
-                defer.$$resolve(result['data']['message']);
+                if(result['data']['success'])
+                    defer.$$resolve(result['data']['message']);
+                else
+                    defer.$$reject(result['data']['message']);
             }).catch(function (err) {
                 defer.$$reject(err);
             });

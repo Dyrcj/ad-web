@@ -2,7 +2,6 @@ define([],
     function(){
 
       function ManagePanelController($scope, $mdDialog, ManagePanelService, $state){
-
           var id;//业务id
           $scope.loaded = false;
           var check_types = ['email','op'];
@@ -11,6 +10,9 @@ define([],
               .then(function(business){
                   $scope.Businesses = [].concat(business);
                   $scope.loaded = true;
+              })
+              .catch(function(err){
+                  alert(err);
               });
 
   //创建业务
@@ -18,6 +20,7 @@ define([],
               $mdDialog.show({
                   controller: DialogBusinessController,
                   templateUrl: '/app/src/managePanel/view/CreateBusiness.html',
+                  css: '/app/src/managePanel/css/createBusiness.css',
                   parent: angular.element(document.getElementById('content')),
                   targetEvent: ev,
                   clickOutsideToClose: true
@@ -54,12 +57,16 @@ define([],
                       'pm': $scope.pm,
                       'audit_type': check_types[1],
                       // 'audit_email': $scope.check_email,
-                      'description': $scope.description
+                      'description': $scope.description,
+                      'buffer_time': $scope.bufftime
                   };
                   ManagePanelService.createBusiness(data_msg)
                       .then(function (result) {
                           alert(result);
                           $mdDialog.cancel();
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               };
           }
@@ -109,7 +116,11 @@ define([],
                       // $scope.check_method = check_types.indexOf(business['audit_type']);
                       // $scope.check_email = business['audit_email'];
                       $scope.description = business['description'];
+                      $scope.bufftime = business['buffer_time'];
                       // $scope.select_check();
+                  })
+                  .catch(function(err){
+                      alert(err);
                   });
 
               $scope.submit_create = function () {
@@ -121,7 +132,8 @@ define([],
                       'audit_type': check_types[1],
                       // 'audit_email': $scope.check_email,
                       'description': $scope.description,
-                      'business_id': id
+                      'business_id': id,
+                      'buffer_time': $scope.bufftime
                   };
                   ManagePanelService.modifyTheBusiness(data_msg)
                       .then(function (result) {
@@ -139,6 +151,9 @@ define([],
                     .then(function(result){
                         alert(result);
                         updateBusinesses();
+                    })
+                    .catch(function(err){
+                        alert(err);
                     });
               }
           }
@@ -153,13 +168,16 @@ define([],
                   .loadAllBusinesses()
                   .then(function(business){
                       $scope.Businesses = [].concat(business);
+                  })
+                  .catch(function(err){
+                      alert(err);
                   });
           }
 
       }
 
   //业务相关信息
-          function AssociateBusinessController($scope, ManagePanelService, $state, $stateParams, $sessionStorage) {
+          function AssociateBusinessController($scope, ManagePanelService, $state, $stateParams, $sessionStorage, $q, $timeout) {
               var id = $stateParams.b_id || $sessionStorage.b_id;
               $sessionStorage.b_id = id
     //服务器信息
@@ -177,6 +195,28 @@ define([],
 
               $scope.addServer = function(){
                   $scope.is_add = true;
+                  $scope.P_ips = [];
+                  ManagePanelService
+                      .getPoolIps(id)
+                      .then(function(res){
+                          if(res.length>0){
+                              res.forEach(function(item, index, array){
+                                  $scope.P_ips.push({
+                                      id: index,
+                                      ip: item['ip'],
+                                      port: item['port'],
+                                      pool_id: item['pool_id']
+                                  });
+                              });
+                          }
+                      })
+                      .catch(function(err){
+                          alert(err);
+                      });
+
+              }
+              $scope.selectIp = function(index){
+                  $scope.proPort = $scope.P_ips[index]['port']
               }
               $scope.deleteServer = function(){
                   $scope.is_delete = true;
@@ -225,20 +265,25 @@ define([],
                           alert('请选择服务器类型！');
                           return;
                       }
-                      if(!reg.test($scope.ip)){
+                      if(!reg.test($scope.ip)&&$scope.type!=1){
                           alert('IP格式不正确！');
                           return;
                       }
-                      if($scope.port==""||$scope.port==undefined){
+                      if(($scope.get_ip===""||$scope.get_ip===undefined)&&$scope.type==1){
+                          alert('请选择IP！');
+                          return;
+                      }
+                      if(($scope.port==""||$scope.port==undefined)&&$scope.type!=1){
                           alert('服务器端口号不能为空！');
                           return;
                       }
                       var data = {
-                          'server_name':$scope.name,
-                          'server_ip':$scope.ip,
-                          'server_port':$scope.port,
-                          'server_type':types[$scope.type],
-                          'business_id':id
+                          'server_name': $scope.name,
+                          'server_ip': $scope.type != 1 ? $scope.ip : $scope.P_ips[$scope.get_ip]['ip'],
+                          'server_port': $scope.type !=1 ? $scope.port : $scope.P_ips[$scope.get_ip]['port'],
+                          'server_type': types[$scope.type],
+                          'business_id': id,
+                          'pool_id': $scope.type != 1 ? null : $scope.P_ips[$scope.get_ip]['pool_id']
                       }
                       ManagePanelService
                           .postAssociateServer(data)
@@ -247,6 +292,9 @@ define([],
                               $scope.is_add = false;
                               emptyServerVal();
                               updateServers();
+                          })
+                          .catch(function(err){
+                              alert(err);
                           });
                   }
       //删除相关服务器
@@ -259,18 +307,13 @@ define([],
                             ManagePanelService
                                 .deleteAssociateServer(data)
                                 .then(function(res){
-                                    if(typeof res == 'string')
-                                        alert(res);
-                                    else{
-                                        var msg = '错误信息：\n';
-                                        for(var i in res){
-                                          msg += res[i]['serverIp'] + ':' + res[i]['message'] + '\n';
-                                        }
-                                        alert(msg);
-                                    }
+                                    alert(res);
                                     $scope.is_delete = false;
                                     $scope.selected = [];
                                     updateServers();
+                                })
+                                .catch(function(err){
+                                    alert(err);
                                 });
                           }
                       }
@@ -286,6 +329,9 @@ define([],
                           for(var i in servers){
                               $scope.items.push(servers[i]['server_ip']);
                           }
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               }
               function emptyServerVal(){
@@ -297,6 +343,13 @@ define([],
               }
 
     //人员信息
+              var deptMaps = {};
+              var departments = [];
+              var personsInDept = [];
+              var perDeptMap = {};
+              $scope.searchDept = null;
+              $scope.searchPerson = null;
+
               emptyPersonVal();
               updatePersons();
 
@@ -304,18 +357,19 @@ define([],
               $scope.add_per = false;
               $scope.addPerson = function(){
                   $scope.add_per = true;
-                  $scope.loaded4 = true;
+                  $scope.loadedDept = false;
                   ManagePanelService
                       .getAssociateDepartments()
                       .then(function(res){
                           for(var i=0;i<res.length;i++){
-                            $scope.departments.push({
-                              id:i,
-                              name:res[i].departmentName,
-                              d_id:res[i].departmentId
-                            });
+                            departments.push(res[i].departmentName);
+                            deptMaps[res[i].departmentName] = res[i].departmentId;
                           }
-                          getDept();
+                          $scope.DeptStates = load(departments);
+                          $scope.loadedDept = true;
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               }
               $scope.deletePerson = function(){
@@ -352,40 +406,42 @@ define([],
                       $scope.selectedPerson = $scope.Persons.slice(0);
                   }
               };
-              $scope.selectDept = getDept;
-              function getDept(){
-                  var dept = $scope.departments[$scope.selectedDept].d_id;
-                  $scope.personsInDept = [];
-                  $scope.selectedPersonDept = "";
-                  $scope.loaded4 = false;
-                  var names = [];
-                  for(var i in $scope.PersonsInfo){
-                      names.push($scope.PersonsInfo[i]['name']);
+
+              $scope.selectDept = function(){
+                  $scope.loadedPer = false;
+                  personsInDept = [];
+                  if(departments.indexOf($scope.searchDept)>-1){
+                      var dept = deptMaps[$scope.searchDept];
+                      var names = [];
+                      for(var i in $scope.PersonsInfo){
+                          names.push($scope.PersonsInfo[i]['name']);
+                      }
+                      ManagePanelService
+                          .getAssociatePersonsInDept(dept)
+                          .then(function(res){
+                              var index = 0;
+                              for(var i in res){
+                                var u_name = res[i]['userName'];
+                                if(names.indexOf(u_name)<0){
+                                  personsInDept.push(u_name);
+                                  perDeptMap[u_name] = res[i]['userId'];
+                                }
+                              }
+                              $scope.PersonStates = load(personsInDept);
+                              $scope.loadedPer = true;
+                          })
+                          .catch(function(err){
+                              alert(err);
+                          });
                   }
-                  ManagePanelService
-                      .getAssociatePersonsInDept(dept)
-                      .then(function(res){
-                          var index = 0;
-                          for(var i in res){
-                            var u_name = res[i]['userName'];
-                            if(names.indexOf(u_name)<0){
-                              $scope.personsInDept.push({
-                                  id:index++,
-                                  name:u_name,
-                                  u_id:res[i]['userId']
-                                });
-                            }
-                          }
-                          $scope.loaded4 = true;
-                      });
               }
               var id_for_name = {};
               $scope.selectPersonDept = function(){
-                  var name = $scope.personsInDept[$scope.selectedPersonDept].name;
-                  var user_id = $scope.personsInDept[$scope.selectedPersonDept].u_id;
-                  var dept = $scope.departments[$scope.selectedDept].name;
+                  var name = $scope.searchPerson;
+                  var user_id = perDeptMap[name];
+                  var dept = $scope.searchDept;
                   var selected = name + '[' + dept + ']';
-                  if($scope.selected_persons.indexOf(selected)<=-1){
+                  if($scope.selected_persons.indexOf(selected)<=-1&&personsInDept.indexOf(name)>-1){
                       $scope.selected_persons.push(selected);
                       id_for_name[name] = user_id;
                   }
@@ -407,18 +463,13 @@ define([],
                           ManagePanelService
                               .postAssociatePersons(data)
                               .then(function(res){
-                                  if(typeof res == 'string')
-                                      alert(res);
-                                  else{
-                                    var msg = '错误信息\n';
-                                    for(var i in res){
-                                      msg += res[i].username + ':' + res[i].message + '\n';
-                                    }
-                                    alert(msg);
-                                  }
+                                  alert(res);
                                   $scope.add_per = false;
                                   emptyPersonVal();
                                   updatePersons();
+                              })
+                              .catch(function(err){
+                                  alert(err);
                               });
                       }
 
@@ -437,43 +488,84 @@ define([],
                                   alert(res);
                                   emptyPersonVal();
                                   updatePersons();
+                              })
+                              .catch(function(err){
+                                  alert(err);
                               });
                           }
                       }
                   }
               }
+
+              //人员查询相关
+              $scope.querySearch  = querySearch;
+              function load(item) {
+                  return item.map(function(state){
+                    return {
+                      value: state.toLowerCase(),
+                      display: state
+                    };
+                  });
+              }
+
+              function querySearch(query, state) {
+                  var results;
+                  if(query=='all')
+                      results = state;
+                  else
+                      results = query ? state.filter( createFilterFor(query) ) : state;
+                  var deferred = $q.defer();
+                  $timeout(function () { deferred.resolve( results ); }, Math.random() * 500, false);
+                  return deferred.promise;
+              }
+
+              function createFilterFor(query) {
+                  var lowercaseQuery = angular.lowercase(query);
+
+                  return function filterFn(state) {
+                    return (state.value.indexOf(lowercaseQuery) === 0);
+                  };
+
+              }
+
               function updatePersons(){
+                  $scope.selectedPerson = [];
                   $scope.loaded3 = false;
                   ManagePanelService
                       .getAssociatePersons(id)
                       .then(function(res){
-                          if(typeof res != 'string') {
-                              $scope.PersonsInfo = res;
-                              for(var i in res){
-                                  $scope.Persons.push(res[i]['user_name']);
-                              }
-                              $scope.loaded3 = true;
+                          $scope.PersonsInfo = res;
+                          for(var i in res){
+                              $scope.Persons.push(res[i]['user_name']);
                           }
+                          $scope.loaded3 = true;
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               }
               function emptyPersonVal(){
                   $scope.PersonsInfo = [];//人员列表显示
                   $scope.Persons = [];//所有人员 id
-                  $scope.personsInDept = [];
+                  personsInDept = [];
                   $scope.selected_persons = [];//选中的人员
-                  $scope.departments = [];
-                  $scope.personsInDept = [];
+                  departments = [];
+                  deptMaps = {};
+                  personsInDept = [];
+                  perDeptMap = {};
                   $scope.selectedDept = 0;
               }
     //负载均衡信息
               updatePool();
               $scope.addLB = function(){
                   $scope.add_pool = true;
-                  $scope.no_pool = false;
                   ManagePanelService
                       .getPools()
                       .then(function(res){
                           $scope.Pools = [].concat(res);
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               }
               $scope.delLB = function(lb_id){
@@ -483,12 +575,14 @@ define([],
                         .then(function(res){
                             alert(res)
                             updatePool();
+                        })
+                        .catch(function(err){
+                            alert(err);
                         });
                   }
               }
               $scope.cancelAdd = function(){
                   $scope.add_pool = false;
-                  $scope.no_pool = true;
               }
 
               $scope.submitAdd = function(){
@@ -501,26 +595,56 @@ define([],
                       .then(function(res){
                           alert(res);
                           updatePool();
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               }
               function updatePool(){
-                  $scope.no_pool = false;
                   $scope.add_pool = false;
-                  $scope.has_pool = false;
                   $scope.loaded5 = false;
                   ManagePanelService
                       .getPool(id)
                       .then(function(res){
-                          if(res){
-                            $scope.has_pool = true;
-                            $scope.pool_msg = res;
-                          }
-                          else{
-                            $scope.no_pool = true;
+                          if(res.length>0){
+                            $scope.PoolMsgs = res;
+                          }else{
+                            $scope.PoolMsgs = [];
                           }
                           $scope.loaded5 = true;
+                      })
+                      .catch(function(err){
+                          alert(err);
                       });
               }
+
+    //历史版本
+            ManagePanelService
+                .getHistoryVersion(id)
+                .then(function(result){
+                    var len = result.length;
+                    var versions = [];
+                    for(var i=0;i<len;i++){
+                        versions.push({
+                          value:i,
+                          legend:result[i]
+                        });
+                    }
+                    $scope.slider = {
+                        value: len - 1,
+                        options: {
+                          floor: 0,
+                          ceil: len-1,
+                          vertical: true,
+                          showSelectionBar: true,
+                          showTicksValues: true,
+                          stepsArray: versions
+                        }
+                    };
+                })
+                .catch(function(err){
+                    alert(err);
+                });
           }
 
 

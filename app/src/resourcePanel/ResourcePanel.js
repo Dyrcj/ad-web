@@ -7,6 +7,7 @@ define(['./ResourcePanelController', './ResourcePanelService'],
                     .state('resourcePanel', {
                         url: '/resourcePanel',
                         templateUrl: '/app/src/resourcePanel/view/main.html',
+                        css: ['./assets/common.css', './src/resourcePanel/css/main.css'],
                         controller: 'ResourcePanelController'
                     })
                     .state('lbcenter', {
@@ -15,6 +16,7 @@ define(['./ResourcePanelController', './ResourcePanelService'],
                           _id:null
                         },
                         templateUrl: '/app/src/resourcePanel/view/LBcenter.html',
+                        css: ['./assets/common.css', './src/resourcePanel/css/lbcenter.css'],
                         controller: 'LBcenterController'
                     });
             })

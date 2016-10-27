@@ -1,12 +1,29 @@
-<div layout="row">
+<md-toolbar class="my-head" layout="row">
+    <span>上线面板</span>
+</md-toolbar>
+<div layout="row" class="my-main-content">
     <md-input-container class="md-block" flex>
         <label>搜索框</label>
         <input ng-model="input">
     </md-input-container>
 </div>
-<md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="60"></md-progress-circular>
+
+<md-progress-circular ng-show="!loaded" class="md-accent md-hue-1" md-diameter="100"></md-progress-circular>
 <div flex layout="column">
-    <md-card ng-repeat="Business in Businesses | filter:input">
+    <md-card ng-repeat="Business in Businesses | filter:input  track by $index">
+
+    <md-progress-linear md-model="indeterminate" ng-show="!Loadeds[Business.business_id]"></md-progress-linear>
+    <!-- <md-card-actions style="text-align:center;font-weight:bolder" layout="row">
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px">同步代码</div>
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px">提价审核</div>
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px;background:rgb(124, 244, 82);color:rgb(255, 255, 255)">提交内测</div>
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px">内测</div>
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px">上线</div>
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px">上线完成</div>
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px">回滚</div>
+        <div flex style="border:1px solid rgb(175, 173, 180);border-radius:15px">回滚完成</div>
+    </md-card-actions> -->
+    <!-- <md-divider></md-divider> -->
         <md-card-title>
             <md-card-title-text>
                 <span class="md-headline">{{Business.name}}</span>
@@ -15,8 +32,8 @@
             </md-card-title-text>
         </md-card-title>
         <md-card-content>
-            <md-radio-group ng-model="onlineSelect">
-                <div ng-repeat="server in Business.servers | orderBy: '-server_type'">
+            <md-radio-group ng-model="onlineSelect" ng-change="keepRadio(onlineSelect, Business.business_id)">
+                <div ng-repeat="server in Business.servers  track by $index">
                     <md-tooltip>
                         当前版本:{{ server.version }}
                     </md-tooltip>
@@ -30,7 +47,7 @@
 
                             <div flex>
                                 <md-menu>
-                                    <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
+                                    <md-button class="my-color-indianred" ng-click="$mdOpenMenu($event)">
                                         {{server.operationStatus[server.operationStatus.length - 1]}}
                                     </md-button>
                                     <md-menu-content>
@@ -47,69 +64,85 @@
                                 <md-tooltip md-direction="Bottom">
                                     服务器启动日志
                                 </md-tooltip>
-                                <ng-md-icon icon="developer_dashboard" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
+                                <ng-md-icon icon="developer_dashboard" size="40" class="my-operation-btn"></ng-md-icon>
                             </md-button>
-                            <md-radio-button class="md-main-span2" ng-value="server" aria-label="Custom checkbox" style="font-size: 10px"></md-radio-button>
+                            <md-radio-button class="md-main-span2" ng-value="server.server_id" aria-label="Custom checkbox"></md-radio-button>
                         </div>
                     </md-list-item>
                 </div>
             </md-radio-group>
         </md-card-content>
+
         <md-divider></md-divider>
-        <md-card-actions layout="row" layout-align="end center">
-            <md-button class="md-fab md-primary" ng-click="sync(Business)">
-                <md-tooltip md-direction="Bottom">
-                    同步代码
-                </md-tooltip>
-                <ng-md-icon icon="file_upload" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-primary" ng-click="innerTest(Business, onlineSelect)">
-                <md-tooltip md-direction="Bottom">
-                    提交内测
-                </md-tooltip>
-                <ng-md-icon icon="cloud_circle" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-primary" ng-click="online(Business, onlineSelect)">
-                <md-tooltip md-direction="Bottom">
-                    上线
-                </md-tooltip>
-                <ng-md-icon icon="cloud_upload" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-primary" ng-click="serverEnable(Business, onlineSelect)">
-                <md-tooltip md-direction="Bottom">
-                    对外
-                </md-tooltip>
-                <ng-md-icon icon="public" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-primary" ng-click="onlineSuccess(Business)">
-                <md-tooltip md-direction="Bottom">
-                    上线完成
-                </md-tooltip>
-                <ng-md-icon icon="cloud_done" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-warn" ng-click="rollBack(Business, onlineSelect)">
-                <md-tooltip md-direction="Bottom">
-                    回滚
-                </md-tooltip>
-                <ng-md-icon icon="undo" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-button class="md-fab md-warn" ng-click="rollBackFinish(Business)">
-                <md-tooltip md-direction="Bottom">
-                    回滚完成
-                </md-tooltip>
-                <ng-md-icon icon="check" size="40" style="font-size: 60px;fill:white"></ng-md-icon>
-            </md-button>
-            <md-menu>
-                <md-button style="color: indianred" ng-click="$mdOpenMenu($event)">
-                    {{Business.operations[0].operation_name}}
-                </md-button>
-                <md-menu-content>
-                    <md-menu-item ng-repeat="operation in Business.operations | orderBy:'-'">
-                        <span>{{operation.operation_name}}</span>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
+        <md-card-actions layout="row">
+            <div flex="30" layout-align="center center" layout="row">
+              <md-menu  layout-align="center center">
+                  <md-button class="my-color-indianred" ng-click="$mdOpenMenu($event)">
+                      {{Business.operations[0].operation_name}}
+                  </md-button>
+                  <md-menu-content>
+                      <md-menu-item ng-repeat="operation in Business.operations | orderBy:'-'">
+                          <span>{{operation.operation_name}}</span>
+                      </md-menu-item>
+                  </md-menu-content>
+              </md-menu>
+            </div>
+            <div flex layout-align="center center" layout="row">
+              <md-button class="md-fab md-primary" ng-click="sync(Business)" ng-disabled="BusinessState[Business.business_id].sync_state">
+                  <md-tooltip md-direction="Bottom">
+                      同步代码
+                  </md-tooltip>
+                  <ng-md-icon icon="file_upload" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-primary" ng-click="innerOP(Business.business_id)" ng-disabled="BusinessState[Business.business_id].innerOp_state">
+                  <md-tooltip md-direction="Bottom">
+                      提交审核
+                  </md-tooltip>
+                  <ng-md-icon icon="fingerprint" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-primary" ng-click="innerTest(Business)" ng-disabled="BusinessState[Business.business_id].innerTest_state">
+                  <md-tooltip md-direction="Bottom">
+                      提交内测
+                  </md-tooltip>
+                  <ng-md-icon icon="cloud_circle" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-primary" ng-click="online(Business, serverMap[Business.business_id][onlineSelect])" ng-disabled="BusinessState[Business.business_id].online_state">
+                  <md-tooltip md-direction="Bottom">
+                      上线
+                  </md-tooltip>
+                  <ng-md-icon icon="cloud_upload" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-primary" ng-click="onlineSuccess(Business)" ng-disabled="BusinessState[Business.business_id].onlineSuccess_state">
+                  <md-tooltip md-direction="Bottom">
+                      上线完成
+                  </md-tooltip>
+                  <ng-md-icon icon="cloud_done" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-primary" ng-click="serverDisable(serverMap[Business.business_id][onlineSelect], Business.business_id)" ng-disabled="BusinessState[Business.business_id].disable_state">
+                  <md-tooltip md-direction="Bottom">
+                      对内
+                  </md-tooltip>
+                  <ng-md-icon icon="do_not_disturb" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-primary" ng-click="serverEnable(serverMap[Business.business_id][onlineSelect], Business.business_id)" ng-disabled="BusinessState[Business.business_id].enable_state">
+                  <md-tooltip md-direction="Bottom">
+                      对外
+                  </md-tooltip>
+                  <ng-md-icon icon="public" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-warn" ng-click="rollBack(Business, serverMap[Business.business_id][onlineSelect])" ng-disabled="BusinessState[Business.business_id].rollBack_state">
+                  <md-tooltip md-direction="Bottom">
+                      回滚
+                  </md-tooltip>
+                  <ng-md-icon icon="undo" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+              <md-button class="md-fab md-warn" ng-click="rollBackFinish(Business)" ng-disabled="BusinessState[Business.business_id].rollBackFinish_state">
+                  <md-tooltip md-direction="Bottom">
+                      回滚完成
+                  </md-tooltip>
+                  <ng-md-icon icon="check" size="40" class="my-operation-btn"></ng-md-icon>
+              </md-button>
+          </div>
         </md-card-actions>
     </md-card>
 </div>
-
